@@ -40,7 +40,7 @@ export const isAuthenticated = async (
     const user = await redis.get(`user-${userEmail}`);
     const currentUserData = await userModel.findOne({email:userEmail});
 
-    console.log(currentUserData);
+    // console.log(currentUserData);
     if(currentUserData?.isBlocked){
         res.clearCookie("access_token");
         res.clearCookie("refresh_token");

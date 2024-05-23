@@ -2,6 +2,7 @@ import { Document } from "mongoose";
 import User from "../../entities/userEntity";
 import Course from "../../entities/course";
 import Order from "../../entities/oder";
+import PremiumAccount from "../../entities/premiumAccount";
 
 
 interface IUserRepository {
@@ -76,7 +77,7 @@ interface IUserRepository {
   ): Promise<boolean | null>;
   getChat(courseId: string): Promise<Course | null>;
   addCourseProgres(userId:string,courseId:string,contentId:string):Promise<User | boolean | null>;
-
+  getPremiumOffers():Promise<PremiumAccount[] | boolean | null>;
 }
 
 export default IUserRepository;

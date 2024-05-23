@@ -551,6 +551,35 @@ class userController {
       console.log(error);
     }
   }
+  async getPremiumOffers(req: Request, res: Response, next: NextFunction) {
+    const { _id } = req.params;
+    const premiumOffers = await this.userCase.getPremiumOffers();
+    if (premiumOffers === false) {
+      return res.json({
+        success: false,
+        message: "no premium Offer found",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "premium offeres are received successfully",
+      premiumOffers,
+    });
+  }
+  async getVieoCallCredentials(req: Request, res: Response, next: NextFunction) {
+    try {
+      const appID = process.env.ZEGOCLOUD_APP_ID;
+      const serverSecret = process.env.ZEGOCLOUD_SERVER_SECRET;
+      res.status(200).json({
+        success:true,
+        appID,
+        serverSecret
+      })
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 }
 
 export default userController;

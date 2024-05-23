@@ -179,7 +179,7 @@ class tutorController {
       const { answer, courseId, contentId, questionId } = req.body;
       const tutor = req.tutor;
       // console.log(tutor);
-      
+
       const result = await this.tutorCase.replyToQuestion(
         tutor,
         answer,
@@ -319,6 +319,46 @@ class tutorController {
       return res.json({
         success: true,
         result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getVieoCallCredentials(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const appID = process.env.ZEGOCLOUD_APP_ID;
+      const serverSecret = process.env.ZEGOCLOUD_SERVER_SECRET;
+      res.status(200).json({
+        success: true,
+        appID,
+        serverSecret,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getLast12MonthsCourseData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const id = req.tutor?._id || "";
+      const courses = await this.tutorCase.getLast12MonthsCourseData(id);
+      if (courses === null) {
+        return res.json({
+          success: false,
+          message: "No data found",
+        });
+      }
+      return res.json({
+        success: true,
+        message: "Review added successfully",
+        courses,
       });
     } catch (error) {
       console.log(error);

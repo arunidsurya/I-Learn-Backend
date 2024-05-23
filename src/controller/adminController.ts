@@ -471,6 +471,128 @@ class adminController {
       notification,
     });
   }
+  async addPremiumOffer(req: Request, res: Response, next: NextFunction) {
+    const { title, description, price } = req.body;
+    const premiumOffer = await this.adminCase.addPremiumOffer(
+      title,
+      description,
+      price
+    );
+    if (premiumOffer === false) {
+      return res.json({
+        success: false,
+        message: " premium package submisssion unsuccessful",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "Package added successfully",
+      premiumOffer,
+    });
+  }
+  async editPremiumOffer(req: Request, res: Response, next: NextFunction) {
+    const { title, description, price } = req.body;
+    const { _id } = req.params;
+    const premiumOffer = await this.adminCase.editPremiumOffer(
+      _id,
+      title,
+      description,
+      price
+    );
+    if (premiumOffer === false) {
+      return res.json({
+        success: false,
+        message: "Package updation unsuccessful",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "package updated successfully",
+      premiumOffer,
+    });
+  }
+  async deletePremiumOffer(req: Request, res: Response, next: NextFunction) {
+    const { _id } = req.params;
+    const premiumOffer = await this.adminCase.deletePremiumOffer(_id);
+    if (premiumOffer === false) {
+      return res.json({
+        success: false,
+        message: "delete package unsuccessful",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "premium package deleted successfully",
+    });
+  }
+  async getOnePremiumOffer(req: Request, res: Response, next: NextFunction) {
+    const { _id } = req.params;
+    const premiumOffer = await this.adminCase.getOnePremiumOffer(_id);
+    if (premiumOffer === false) {
+      return res.json({
+        success: false,
+        message: "no premium Offer found",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "premium offere is received successfully",
+      premiumOffer,
+    });
+  }
+  async getPremiumOffers(req: Request, res: Response, next: NextFunction) {
+    const { _id } = req.params;
+    const premiumOffers = await this.adminCase.getPremiumOffers();
+    if (premiumOffers === false) {
+      return res.json({
+        success: false,
+        message: "no premium Offer found",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "premium offeres are received successfully",
+      premiumOffers,
+    });
+  }
+  async getSearchResult(req: Request, res: Response, next: NextFunction) {
+    const { searchKey } = req.body;
+    try {
+      const result = await this.adminCase.getSearchResult(searchKey);
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "internal server error, please try again later",
+        });
+      }
+
+      return res.json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getOneCourse(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    try {
+      const result = await this.adminCase.getOneCourse(id);
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "internal server error, please try again later",
+        });
+      }
+
+      return res.json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default adminController;

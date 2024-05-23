@@ -10,8 +10,12 @@ import tutorModel from "../database/tutorModel";
 import userModel from "../database/userModel";
 import CourseModel from "../database/CourseModel";
 import Course from "../../entities/course";
-import NotificationModel, { INotification } from "../database/notificationModel";
+import NotificationModel, {
+  INotification,
+} from "../database/notificationModel";
 import OrderModel from "../database/orderModel";
+import PremiumAccount from "../../entities/premiumAccount";
+import PremiumAccountModel from "../database/PremiumAccountSchema";
 
 class adminRepositoty implements IAdminRepository {
   async findByEmail(email: string): Promise<Admin | null> {
@@ -292,7 +296,6 @@ class adminRepositoty implements IAdminRepository {
   }
   async getNonApprovedCourses(): Promise<Document<any, any, Course>[] | null> {
     try {
-      
       const courses = await CourseModel.find({ approved: false })
         .populate("courseData")
         .sort({ createdAt: -1 })
@@ -332,115 +335,257 @@ class adminRepositoty implements IAdminRepository {
   }
   async getNotification(): Promise<boolean | INotification[] | null> {
     try {
+      const notifications = await NotificationModel.find({
+        status: "unread",
+      }).sort({ createdAt: -1 });
 
-      const notifications = await NotificationModel.find({status:"unread"}).sort({createdAt:-1});
-      
-      if(! notifications){
-        return null
+      if (!notifications) {
+        return null;
       }
 
       return notifications;
-      
     } catch (error) {
       console.log(error);
-      return null
-      
+      return null;
     }
   }
-  async changeNotificationStatus(id: string): Promise<boolean | INotification | null> {
+  async changeNotificationStatus(
+    id: string
+  ): Promise<boolean | INotification | null> {
     try {
-      const notification = await NotificationModel.findById(id)
-      if(!notification){
-        return false
+      const notification = await NotificationModel.findById(id);
+      if (!notification) {
+        return false;
       }
-      notification.status="read"
+      notification.status = "read";
       await notification.save();
-      return notification
+      return notification;
     } catch (error) {
       console.log(error);
-      return false
+      return false;
     }
   }
-    async last12MonthsUserData(): Promise<boolean | any | null> {
+  async last12MonthsUserData(): Promise<boolean | any | null> {
     try {
-      const last12Months:any[] =[];
+      const last12Months: any[] = [];
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
 
-      for(let i = 11 ; i>=0 ; i--){
-        const endDate = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()-i * 28);
-        const startDate = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()- 28);
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
 
-        const monthYear = endDate.toLocaleString("default",{day:"numeric",month:"short",year:"numeric"});
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
 
-        const count = await userModel.countDocuments({createdAt:{$gte:startDate,$lt:endDate}})
-        last12Months.push({month:monthYear,count})
+        const count = await userModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },
+        });
+        last12Months.push({ month: monthYear, count });
       }
       return last12Months;
-
     } catch (error) {
       console.log(error);
-      return null
-      
+      return null;
     }
   }
   async last12MonthsCourseData(): Promise<any> {
-        try {
-          const last12Months: any[] = [];
-          const currentDate = new Date();
-          currentDate.setDate(currentDate.getDate() + 1);
-
-          for (let i = 11; i >= 0; i--) {
-            const endDate = new Date(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-              currentDate.getDate() - i * 28
-            );
-            const startDate = new Date(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-              currentDate.getDate() - 28
-            );
-
-            const monthYear = endDate.toLocaleString("default", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            });
-
-            const count = await CourseModel.countDocuments({
-              createdAt: { $gte: startDate, $lt: endDate },
-            });
-            last12Months.push({ month: monthYear, count });
-          }
-          return last12Months;
-        } catch (error) {
-          console.log(error);
-          return null;
-        }
-  }
-
-  async last12MonthsOrderData(): Promise<any> {
-        try {
-      const last12Months:any[] =[];
+    try {
+      const last12Months: any[] = [];
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
 
-      for(let i = 11 ; i>=0 ; i--){
-        const endDate = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()-i * 28);
-        const startDate = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()- 28);
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
 
-        const monthYear = endDate.toLocaleString("default",{day:"numeric",month:"short",year:"numeric"});
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
 
-        const count = await OrderModel.countDocuments({createdAt:{$gte:startDate,$lt:endDate}})
-        last12Months.push({month:monthYear,count})
+        const count = await CourseModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },
+        });
+        last12Months.push({ month: monthYear, count });
       }
       return last12Months;
-
     } catch (error) {
       console.log(error);
-      return null
-      
+      return null;
+    }
+  }
+
+  async last12MonthsOrderData(): Promise<any> {
+    try {
+      const last12Months: any[] = [];
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
+
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+
+        const count = await OrderModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },
+        });
+        last12Months.push({ month: monthYear, count });
+      }
+      return last12Months;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async addPremiumOffer(
+    title: string,
+    description: string,
+    price: number
+  ): Promise<boolean | PremiumAccount | null> {
+    try {
+      const premiumOffer = await PremiumAccountModel.create({
+        title,
+        description,
+        price,
+      });
+      if (!premiumOffer) {
+        return false;
+      }
+      return premiumOffer;
+    } catch (error: any) {
+      console.log(error);
+      return false;
+    }
+  }
+  async editPremiumOffer(
+    _id: string,
+    title: string,
+    description: string,
+    price: number
+  ): Promise<boolean | PremiumAccount | null> {
+    try {
+      const premiumOffer = await PremiumAccountModel.findById(_id);
+      if (!premiumOffer) {
+        return false;
+      }
+
+      premiumOffer.title = title;
+      premiumOffer.description = description;
+      premiumOffer.price = price;
+
+      await premiumOffer.save();
+
+      return premiumOffer;
+    } catch (error: any) {
+      console.log(error);
+      return false;
+    }
+  }
+  async deletePremiumOffer(_id: string): Promise<boolean | null> {
+    try {
+      const premiumOffer = await PremiumAccountModel.findByIdAndDelete(_id);
+
+      if (!premiumOffer) {
+        return false;
+      }
+
+      return true;
+    } catch (error: any) {
+      console.log("Error deleting premium offer:", error);
+
+      return false;
+    }
+  }
+  async getPremiumOffers(): Promise<boolean | PremiumAccount[] | null> {
+    try {
+      const premiumOffers = await PremiumAccountModel.find();
+      if (premiumOffers.length === 0) {
+        return false;
+      }
+      return premiumOffers;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getOnePremiumOffer(
+    _id: string
+  ): Promise<boolean | PremiumAccount | null> {
+    try {
+      const premiumOffer = await PremiumAccountModel.findById(_id);
+      if (!premiumOffer) {
+        return false;
+      }
+      return premiumOffer;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getSearchResult(searchKey: string): Promise<boolean | any[] | null> {
+    try {
+      const escapedSearchKey = searchKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedSearchKey, "i");
+
+      const result = await CourseModel.find({ courseTitle: regex });
+
+      if (result.length === 0) {
+        return null; // No matches found
+      }
+
+      return result; // Return the array of results
+    } catch (error) {
+      console.error("Error occurred while searching for courses:", error);
+      return false; // Error occurred
+    }
+  }
+  async getOneCourse(id: string): Promise<Course | null> {
+    try {
+      const course = await CourseModel.findById(id)
+        .populate("courseData")
+        .exec();
+
+      if (!course) {
+        return null;
+      }
+      return course;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

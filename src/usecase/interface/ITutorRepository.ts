@@ -44,6 +44,7 @@ interface ITutorRepository {
   ): Promise<boolean | null>;
   getStudents(tutorId: string): Promise<any[] | boolean | null>;
   getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
+  last12MonthsCourseData(id:string): Promise<any | boolean | null>;
 }
 
 export default ITutorRepository;

@@ -303,13 +303,92 @@ class adminUseCase {
       return null;
     }
   }
-  async changeNotificationStatus(id:string){
+  async changeNotificationStatus(id: string) {
     try {
-      const notification = await this.iAdminRepository.changeNotificationStatus(id)
-      return notification
+      const notification = await this.iAdminRepository.changeNotificationStatus(
+        id
+      );
+      return notification;
     } catch (error) {
       console.log(error);
-      return false
+      return false;
+    }
+  }
+  async addPremiumOffer(title: string, description: string, price: number) {
+    try {
+      const premiumOffer = await this.iAdminRepository.addPremiumOffer(
+        title,
+        description,
+        price
+      );
+      return premiumOffer;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async editPremiumOffer(
+    _id: string,
+    title: string,
+    description: string,
+    price: number
+  ) {
+    try {
+      const premiumOffer = await this.iAdminRepository.editPremiumOffer(
+        _id,
+        title,
+        description,
+        price
+      );
+      return premiumOffer;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async deletePremiumOffer(_id: string) {
+    try {
+      const result = await this.iAdminRepository.deletePremiumOffer(_id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getOnePremiumOffer(_id: string) {
+    try {
+      const premiumOffer = await this.iAdminRepository.getOnePremiumOffer(_id);
+      return premiumOffer;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getPremiumOffers() {
+    try {
+      const premiumOffers = await this.iAdminRepository.getPremiumOffers();
+      return premiumOffers;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getSearchResult(searchKey: string) {
+    try {
+      const result = await this.iAdminRepository.getSearchResult(searchKey);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async getOneCourse(id: string) {
+    try {
+      const result = await this.iAdminRepository.getOneCourse(id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

@@ -322,14 +322,13 @@ class tutorRepository implements ITutorRepository {
       }
 
       // console.log(tutor);
-      
 
       const newAnswer: any = {
-        user:tutor,
+        user: tutor,
         answer,
       };
       console.log(newAnswer);
-      
+
       question.questionReplies.push(newAnswer);
       await courseContentData.save();
 
@@ -472,6 +471,43 @@ class tutorRepository implements ITutorRepository {
     } catch (error) {
       console.error("Error occurred while searching for courses:", error);
       return false; // Error occurred
+    }
+  }
+  async last12MonthsCourseData(id: string): Promise<any> {
+    try {
+      const last12Months: any[] = [];
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
+
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+
+        const count = await CourseModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },
+          instructorId: id,
+        });
+
+        last12Months.push({ month: monthYear, count });
+      }
+      return last12Months;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

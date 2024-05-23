@@ -63,5 +63,12 @@ tutorRouter.get("/tutor/get-students/:id", isTutuorAuthorized, (req, res, next) 
 tutorRouter.post("/tutor/get-search-result", isTutuorAuthorized, (req, res, next) => {
   controller.getSearchResult(req, res, next);
 });
+tutorRouter.get("/tutor/get-credentials", isTutuorAuthorized, (req, res, next) => {
+  controller.getVieoCallCredentials(req, res, next);
+});
+tutorRouter.get("/tutor/course-analytics", isTutuorAuthorized, (req, res, next) => {
+  controller.getLast12MonthsCourseData(req, res, next);
+});
+
 
 export default tutorRouter;

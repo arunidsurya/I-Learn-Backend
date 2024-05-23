@@ -88,5 +88,26 @@ adminRouter.get("/admin/order-analytics", isAuthorized, (req, res, next) => {
 adminRouter.get("/admin/change-notification-status/:id", isAuthorized, (req, res, next) => {
   controller.changeNotificationStatus(req, res, next);
 });
+adminRouter.post("/admin/add-premiumOffer", isAuthorized, (req, res, next) => {
+  controller.addPremiumOffer(req, res, next);
+});
+adminRouter.put("/admin/edit-premiumOffer/:_id", isAuthorized, (req, res, next) => {
+  controller.editPremiumOffer(req, res, next);
+});
+adminRouter.delete("/admin/delete-premiumOffer/:_id", isAuthorized, (req, res, next) => {
+  controller.deletePremiumOffer(req, res, next);
+});
+adminRouter.get("/admin/get-one-premiumOffer/:_id", isAuthorized, (req, res, next) => {
+  controller.getOnePremiumOffer(req, res, next);
+});
+adminRouter.get("/admin/get-premiumOffers", isAuthorized, (req, res, next) => {
+  controller.getPremiumOffers(req, res, next);
+});
+adminRouter.post("/admin/get-search-result", isAuthorized, (req, res, next) => {
+  controller.getSearchResult(req, res, next);
+});
+adminRouter.get("/admin/get-one-course/:id", isAuthorized, (req, res, next) => {
+  controller.getOneCourse(req, res, next);
+});
 
 export default adminRouter;

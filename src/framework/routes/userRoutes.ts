@@ -5,6 +5,7 @@ import userUseCase from "../../usecase/UserUserCase";
 import sendMail from "../services/SendMail";
 import JwtTokenService from "../services/JwtToken";
 import { isAuthenticated } from "../middlewares/UserAuth";
+import { isPremium } from "../middlewares/premiumAccountAuth";
 
 const userRouter = express.Router();
 const repository = new userRepository();
@@ -95,7 +96,13 @@ userRouter.put("/user/add-progress", isAuthenticated, (req, res, next) => {
   controller.addCourseProgress(req, res, next);
 });
 
+userRouter.get("/user/get-premiumOffers", isAuthenticated, (req, res, next) => {
+  controller.getPremiumOffers(req, res, next);
+});
 
+userRouter.get("/user/get-videocall-credentials", isAuthenticated,isPremium, (req, res, next) => {
+  controller.getVieoCallCredentials(req, res, next);
+});
 
 
 

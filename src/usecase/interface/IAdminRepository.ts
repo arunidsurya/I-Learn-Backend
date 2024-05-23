@@ -5,6 +5,7 @@ import Course from "../../entities/course";
 import Tutor from "../../entities/tutorEntity";
 import User from "../../entities/userEntity";
 import { INotification } from "../../framework/database/notificationModel";
+import PremiumAccount from "../../entities/premiumAccount";
 
 interface IAdminRepository {
   findByEmail(email: string): Promise<Admin | null>;
@@ -30,6 +31,13 @@ interface IAdminRepository {
   last12MonthsUserData(): Promise<any | boolean | null>;
   last12MonthsCourseData(): Promise<any | boolean | null>;
   last12MonthsOrderData(): Promise<any | boolean | null>;
+  addPremiumOffer(title:string,description:string,price:number):Promise<PremiumAccount | boolean | null>;
+  editPremiumOffer(_id:string,title:string,description:string,price:number):Promise<PremiumAccount | boolean | null>;
+  deletePremiumOffer(_id:string):Promise< boolean | null>;
+  getPremiumOffers():Promise<PremiumAccount[] | boolean | null>;
+  getOnePremiumOffer(_id:string):Promise<PremiumAccount | boolean | null>;
+  getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
+  getOneCourse(id: string): Promise<Course | null>;
 }
 
 export default IAdminRepository;

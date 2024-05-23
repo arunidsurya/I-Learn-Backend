@@ -504,6 +504,15 @@ class userUserCase {
     }
   }
 
+  async getPremiumOffers() {
+    try {
+      const premiumOffers = await this.iUserRepository.getPremiumOffers();
+      return premiumOffers;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 }
 
 export default userUserCase;

@@ -240,13 +240,22 @@ class tutorUseCase {
     }
   }
 
-  async getSearchResult(searchKey:string){
+  async getSearchResult(searchKey: string) {
     try {
       const result = await this.iTutorRepository.getSearchResult(searchKey);
-      return result
+      return result;
     } catch (error) {
-      console.log(error)
-      return null
+      console.log(error);
+      return null;
+    }
+  }
+  async getLast12MonthsCourseData(id:string) {
+    try {
+      const result = await this.iTutorRepository.last12MonthsCourseData(id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

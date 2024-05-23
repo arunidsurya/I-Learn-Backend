@@ -14,6 +14,8 @@ import NotificationModel from "../database/notificationModel";
 import CourseDataModel from "../database/courseData";
 import ChatModel from "../database/liveChat";
 import PremiumOrderModel from "../database/PremiumOrderModel";
+import PremiumAccountModel from "../database/PremiumAccountSchema";
+import PremiumAccount from "../../entities/premiumAccount";
 
 
 class userRepository implements IUserRepository {
@@ -24,7 +26,7 @@ class userRepository implements IUserRepository {
     // console.log("isEmailExist:", isEmailExist);
     return isEmailExist;
   }
-  
+
   async createUser(user: User): Promise<User | null> {
     try {
       const { name, email, gender, password } = user;
@@ -623,7 +625,18 @@ class userRepository implements IUserRepository {
       return null;
     }
   }
-
+  async getPremiumOffers(): Promise<boolean | PremiumAccount[] | null> {
+    try {
+      const premiumOffers = await PremiumAccountModel.find();
+      if (premiumOffers.length === 0) {
+        return false;
+      }
+      return premiumOffers;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 }
 
 export default userRepository;
