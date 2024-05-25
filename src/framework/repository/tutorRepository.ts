@@ -11,6 +11,7 @@ import Category from "../../entities/Categories";
 import CategoryModel from "../database/CategoryModel";
 import CourseDataModel from "../database/courseData";
 import Course from "../../entities/course";
+import NotificationModel from "../database/notificationModel";
 
 class tutorRepository implements ITutorRepository {
   JwtToken = new JwtTokenService();
@@ -81,7 +82,7 @@ class tutorRepository implements ITutorRepository {
       return null;
     }
   }
-  async createCourse(data: Course): Promise<Document<any, any, Course> | null> {
+  async createCourse(data: Course,tutor:Tutor): Promise<Document<any, any, Course> | null> {
     try {
       // console.log(data);
 
@@ -132,6 +133,11 @@ class tutorRepository implements ITutorRepository {
       });
 
       if (savedCourse) {
+              await NotificationModel.create({
+                userId: tutor?._id,
+                title: "New Course Added",
+                message: `New Course Added by ${tutor?.name}`,
+              });
         return savedCourse;
       } else {
         return null;
@@ -250,16 +256,12 @@ class tutorRepository implements ITutorRepository {
         courseData,
       } = data;
 
-      console.log(data);
-      // console.log(courseData);
-
       // Update the courseData documents
       await Promise.all(
         courseData.map(async (data) => {
           await CourseDataModel.findByIdAndUpdate(data._id, data);
         })
       );
-      console.log("reached here");
 
       // Update the course document
       const updatedCourse = await CourseModel.findByIdAndUpdate(

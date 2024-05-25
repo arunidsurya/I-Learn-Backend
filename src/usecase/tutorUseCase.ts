@@ -89,9 +89,9 @@ class tutorUseCase {
       console.log(error);
     }
   }
-  async createCourse(data: Course) {
+  async createCourse(data: Course,tutor:Tutor) {
     try {
-      const savedCourse = await this.iTutorRepository.createCourse(data);
+      const savedCourse = await this.iTutorRepository.createCourse(data,tutor);
       if (savedCourse) {
         return savedCourse;
       }

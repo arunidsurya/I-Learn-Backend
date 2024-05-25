@@ -50,15 +50,23 @@ userRouter.get("/user/courses", (req, res, next) => {
 userRouter.get("/user/getCourse/:_id", (req, res, next) => {
   controller.getCourse(req, res, next);
 });
-userRouter.get("/user/getCourseContent/:_id", isAuthenticated,(req, res, next) => {
-  controller.getCourseContent(req, res, next);
-});
-userRouter.post("/user/create-order", isAuthenticated,(req, res, next) => {
+userRouter.get(
+  "/user/getCourseContent/:_id",
+  isAuthenticated,
+  (req, res, next) => {
+    controller.getCourseContent(req, res, next);
+  }
+);
+userRouter.post("/user/create-order", isAuthenticated, (req, res, next) => {
   controller.createOrder(req, res, next);
 });
-userRouter.post("/user/create-premium-order", isAuthenticated, (req, res, next) => {
-  controller.createPremiumOrder(req, res, next);
-});
+userRouter.post(
+  "/user/create-premium-order",
+  isAuthenticated,
+  (req, res, next) => {
+    controller.createPremiumOrder(req, res, next);
+  }
+);
 
 userRouter.get("/user/stripepublishablekey", (req, res, next) => {
   controller.sendStripePulishKey(req, res, next);
@@ -68,7 +76,7 @@ userRouter.post("/user/payment", isAuthenticated, (req, res, next) => {
   controller.newPayment(req, res, next);
 });
 
-userRouter.put("/user/add-question",isAuthenticated, (req, res, next) => {
+userRouter.put("/user/add-question", isAuthenticated, (req, res, next) => {
   controller.addQuestion(req, res, next);
 });
 
@@ -88,9 +96,13 @@ userRouter.get("/user/get-chat/:id", isAuthenticated, (req, res, next) => {
   controller.getChat(req, res, next);
 });
 
-userRouter.get("/user/enrolled_courses/:id", isAuthenticated, (req, res, next) => {
-  controller.getEnrolledCourses(req, res, next);
-});
+userRouter.get(
+  "/user/enrolled_courses/:id",
+  isAuthenticated,
+  (req, res, next) => {
+    controller.getEnrolledCourses(req, res, next);
+  }
+);
 
 userRouter.put("/user/add-progress", isAuthenticated, (req, res, next) => {
   controller.addCourseProgress(req, res, next);
@@ -100,12 +112,17 @@ userRouter.get("/user/get-premiumOffers", isAuthenticated, (req, res, next) => {
   controller.getPremiumOffers(req, res, next);
 });
 
-userRouter.get("/user/get-videocall-credentials", isAuthenticated,isPremium, (req, res, next) => {
-  controller.getVieoCallCredentials(req, res, next);
+userRouter.get(
+  "/user/get-videocall-credentials",
+  isAuthenticated,
+  isPremium,
+  (req, res, next) => {
+    controller.getVieoCallCredentials(req, res, next);
+  }
+);
+
+userRouter.post("/user/get-search-result", isAuthenticated, (req, res, next) => {
+  controller.getSearchResult(req, res, next);
 });
-
-
-
-
 
 export default userRouter;

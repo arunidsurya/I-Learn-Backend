@@ -13,7 +13,7 @@ interface ITutorRepository {
     email: string,
     password: string
   ): Promise<string | null>;
-  createCourse(data: Course): Promise<Document<any, any, Course> | null>;
+  createCourse(data: Course,tutor:Tutor): Promise<Document<any, any, Course> | null>;
   editCourse(data: Course): Promise<Document<any, any, Course> | null>;
   deleteCourse(_id: string): Promise<Boolean | null>;
   getAllCourses(id: string): Promise<Document<any, any, Course>[] | null>;

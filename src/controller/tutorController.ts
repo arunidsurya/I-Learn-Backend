@@ -56,22 +56,23 @@ class tutorController {
     }
   }
   async createCourse(req: Request, res: Response, next: NextFunction) {
-    console.log("calling controller");
-
+    const tutor = req?.tutor;
     try {
       const { data } = req.body;
-      const courseStatus = await this.tutorCase.createCourse(data);
-      if (courseStatus === null) {
-        return res.status(500).json({
-          success: false,
-          messge: "Course creation unsuccessfull",
+      if (tutor) {
+        const courseStatus = await this.tutorCase.createCourse(data, tutor);
+        if (courseStatus === null) {
+          return res.status(500).json({
+            success: false,
+            messge: "Course creation unsuccessfull",
+          });
+        }
+        return res.status(201).json({
+          success: true,
+          message: "Course added suucessfully",
+          courseStatus,
         });
       }
-      return res.status(201).json({
-        success: true,
-        message: "Course added suucessfully",
-        courseStatus,
-      });
     } catch (error) {
       console.log(error);
     }

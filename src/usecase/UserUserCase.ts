@@ -513,6 +513,15 @@ class userUserCase {
       return false;
     }
   }
+  async getSearchResult(searchKey: string) {
+    try {
+      const result = await this.iUserRepository.getSearchResult(searchKey);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 export default userUserCase;

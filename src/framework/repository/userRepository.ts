@@ -457,8 +457,6 @@ class userRepository implements IUserRepository {
         rating,
       };
 
-      console.log(reviewData);
-
       course?.reviews.push(reviewData);
 
       let avg = 0;
@@ -522,6 +520,8 @@ class userRepository implements IUserRepository {
       const course = await CourseModel.findById(courseId)
         .populate("chat")
         .exec();
+
+      console.log(course?.chat);
 
       return course;
     } catch (error) {
@@ -635,6 +635,23 @@ class userRepository implements IUserRepository {
     } catch (error) {
       console.log(error);
       return false;
+    }
+  }
+  async getSearchResult(searchKey: string): Promise<boolean | any[] | null> {
+    try {
+      const escapedSearchKey = searchKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedSearchKey, "i");
+
+      const result = await CourseModel.find({ courseTitle: regex,approved:true });
+
+      if (result.length === 0) {
+        return null; // No matches found
+      }
+
+      return result; // Return the array of results
+    } catch (error) {
+      console.error("Error occurred while searching for courses:", error);
+      return false; // Error occurred
     }
   }
 }

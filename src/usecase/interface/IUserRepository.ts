@@ -78,6 +78,7 @@ interface IUserRepository {
   getChat(courseId: string): Promise<Course | null>;
   addCourseProgres(userId:string,courseId:string,contentId:string):Promise<User | boolean | null>;
   getPremiumOffers():Promise<PremiumAccount[] | boolean | null>;
+  getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
 }
 
 export default IUserRepository;

@@ -566,18 +566,41 @@ class userController {
       premiumOffers,
     });
   }
-  async getVieoCallCredentials(req: Request, res: Response, next: NextFunction) {
+  async getVieoCallCredentials(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const appID = process.env.ZEGOCLOUD_APP_ID;
       const serverSecret = process.env.ZEGOCLOUD_SERVER_SECRET;
       res.status(200).json({
-        success:true,
+        success: true,
         appID,
-        serverSecret
-      })
+        serverSecret,
+      });
     } catch (error) {
       console.log(error);
-      
+    }
+  }
+
+  async getSearchResult(req: Request, res: Response, next: NextFunction) {
+    const { searchKey } = req.body;
+    try {
+      const result = await this.userCase.getSearchResult(searchKey);
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "internal server error, please try again later",
+        });
+      }
+
+      return res.json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 }
