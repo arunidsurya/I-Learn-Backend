@@ -13,7 +13,10 @@ interface ITutorRepository {
     email: string,
     password: string
   ): Promise<string | null>;
-  createCourse(data: Course,tutor:Tutor): Promise<Document<any, any, Course> | null>;
+  createCourse(
+    data: Course,
+    tutor: Tutor
+  ): Promise<Document<any, any, Course> | null>;
   editCourse(data: Course): Promise<Document<any, any, Course> | null>;
   deleteCourse(_id: string): Promise<Boolean | null>;
   getAllCourses(id: string): Promise<Document<any, any, Course>[] | null>;
@@ -44,7 +47,9 @@ interface ITutorRepository {
   ): Promise<boolean | null>;
   getStudents(tutorId: string): Promise<any[] | boolean | null>;
   getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
-  last12MonthsCourseData(id:string): Promise<any | boolean | null>;
+  last12MonthsCourseData(id: string): Promise<any | boolean | null>;
+  last12MonthsOrderData(tutorId: string): Promise<any | boolean | null>;
+  last12MonthsUserData(tutorId: string): Promise<any | boolean | null>;
 }
 
 export default ITutorRepository;

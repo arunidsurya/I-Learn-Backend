@@ -72,7 +72,7 @@ userRouter.get("/user/stripepublishablekey", (req, res, next) => {
   controller.sendStripePulishKey(req, res, next);
 });
 
-userRouter.post("/user/payment", isAuthenticated, (req, res, next) => {
+userRouter.post("/user/payment", (req, res, next) => {
   controller.newPayment(req, res, next);
 });
 
@@ -121,8 +121,16 @@ userRouter.get(
   }
 );
 
-userRouter.post("/user/get-search-result", isAuthenticated, (req, res, next) => {
+userRouter.post("/user/get-search-result", (req, res, next) => {
   controller.getSearchResult(req, res, next);
+});
+
+userRouter.post("/user/get-courses-by_category", (req, res, next) => {
+  controller.getCoursesByCategory(req, res, next);
+});
+
+userRouter.get("/user/get-categories", (req, res, next) => {
+  controller.getCategories(req, res, next);
 });
 
 export default userRouter;

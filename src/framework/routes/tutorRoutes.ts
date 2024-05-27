@@ -69,6 +69,13 @@ tutorRouter.get("/tutor/get-credentials", isTutuorAuthorized, (req, res, next) =
 tutorRouter.get("/tutor/course-analytics", isTutuorAuthorized, (req, res, next) => {
   controller.getLast12MonthsCourseData(req, res, next);
 });
+tutorRouter.get("/tutor/order-analytics", isTutuorAuthorized, (req, res, next) => {
+  controller.getLast12MonthsOrderData(req, res, next);
+});
+tutorRouter.get("/tutor/user-analytics", isTutuorAuthorized, (req, res, next) => {
+  controller.getLast12MonthsUserData(req, res, next);
+});
+
 
 
 export default tutorRouter;

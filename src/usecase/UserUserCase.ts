@@ -522,6 +522,24 @@ class userUserCase {
       return null;
     }
   }
+  async getCoursesByCategory(category: string) {
+    try {
+      const courses = await this.iUserRepository.getCoursesByCategory(category);
+      return courses;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  async getCategories() {
+    try {
+      const categories = await this.iUserRepository.getCategories();
+      return categories;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 }
 
 export default userUserCase;

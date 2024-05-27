@@ -3,6 +3,7 @@ import User from "../../entities/userEntity";
 import Course from "../../entities/course";
 import Order from "../../entities/oder";
 import PremiumAccount from "../../entities/premiumAccount";
+import Category from "../../entities/Categories";
 
 
 interface IUserRepository {
@@ -79,6 +80,8 @@ interface IUserRepository {
   addCourseProgres(userId:string,courseId:string,contentId:string):Promise<User | boolean | null>;
   getPremiumOffers():Promise<PremiumAccount[] | boolean | null>;
   getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
+  getCoursesByCategory(category:string):Promise<Course[] | boolean | null>;
+  getCategories():Promise<Category[] | boolean| null>;
 }
 
 export default IUserRepository;

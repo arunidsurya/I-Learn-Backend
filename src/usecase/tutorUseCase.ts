@@ -89,9 +89,9 @@ class tutorUseCase {
       console.log(error);
     }
   }
-  async createCourse(data: Course,tutor:Tutor) {
+  async createCourse(data: Course, tutor: Tutor) {
     try {
-      const savedCourse = await this.iTutorRepository.createCourse(data,tutor);
+      const savedCourse = await this.iTutorRepository.createCourse(data, tutor);
       if (savedCourse) {
         return savedCourse;
       }
@@ -249,9 +249,27 @@ class tutorUseCase {
       return null;
     }
   }
-  async getLast12MonthsCourseData(id:string) {
+  async getLast12MonthsCourseData(id: string) {
     try {
       const result = await this.iTutorRepository.last12MonthsCourseData(id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async getLast12MonthsOrderData(tutorId: string) {
+    try {
+      const result = await this.iTutorRepository.last12MonthsOrderData(tutorId);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async getLast12MonthsUserData(tutorId: string) {
+    try {
+      const result = await this.iTutorRepository.last12MonthsUserData(tutorId);
       return result;
     } catch (error) {
       console.log(error);

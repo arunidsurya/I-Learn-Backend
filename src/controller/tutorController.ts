@@ -358,8 +358,54 @@ class tutorController {
       }
       return res.json({
         success: true,
-        message: "Review added successfully",
+        message: "course analytics found successfully",
         courses,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getLast12MonthsOrderData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const tutorId = req.tutor?._id || "";
+      const orders = await this.tutorCase.getLast12MonthsOrderData(tutorId);
+      if (orders === null) {
+        return res.json({
+          success: false,
+          message: "No data found",
+        });
+      }
+      return res.json({
+        success: true,
+        message: "orders analytics found successfully",
+        orders,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getLast12MonthsUserData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const tutorId = req.tutor?._id || "";
+      const users = await this.tutorCase.getLast12MonthsUserData(tutorId);
+      if (users === null) {
+        return res.json({
+          success: false,
+          message: "No data found",
+        });
+      }
+      return res.json({
+        success: true,
+        message: "users analytics found successfully",
+        users,
       });
     } catch (error) {
       console.log(error);

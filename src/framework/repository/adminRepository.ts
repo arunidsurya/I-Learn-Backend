@@ -393,6 +393,8 @@ class adminRepositoty implements IAdminRepository {
           createdAt: { $gte: startDate, $lt: endDate },
         });
         last12Months.push({ month: monthYear, count });
+        console.log(last12Months);
+        
       }
       return last12Months;
     } catch (error) {

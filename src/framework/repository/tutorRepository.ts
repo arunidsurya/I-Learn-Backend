@@ -12,6 +12,7 @@ import CategoryModel from "../database/CategoryModel";
 import CourseDataModel from "../database/courseData";
 import Course from "../../entities/course";
 import NotificationModel from "../database/notificationModel";
+import OrderModel from "../database/orderModel";
 
 class tutorRepository implements ITutorRepository {
   JwtToken = new JwtTokenService();
@@ -82,7 +83,10 @@ class tutorRepository implements ITutorRepository {
       return null;
     }
   }
-  async createCourse(data: Course,tutor:Tutor): Promise<Document<any, any, Course> | null> {
+  async createCourse(
+    data: Course,
+    tutor: Tutor
+  ): Promise<Document<any, any, Course> | null> {
     try {
       // console.log(data);
 
@@ -106,9 +110,8 @@ class tutorRepository implements ITutorRepository {
 
       const createdCourseData = await CourseDataModel.create(courseData);
 
-      // console.log("createdCourseData :", createdCourseData);
+      console.log(courseData);
 
-      // Convert createdCourseData to an array if it's not already
       const courseDataIds = Array.isArray(createdCourseData)
         ? createdCourseData.map((data) => data._id)
         : [];
@@ -133,11 +136,11 @@ class tutorRepository implements ITutorRepository {
       });
 
       if (savedCourse) {
-              await NotificationModel.create({
-                userId: tutor?._id,
-                title: "New Course Added",
-                message: `New Course Added by ${tutor?.name}`,
-              });
+        await NotificationModel.create({
+          userId: tutor?._id,
+          title: "New Course Added",
+          message: `New Course Added by ${tutor?.name}`,
+        });
         return savedCourse;
       } else {
         return null;
@@ -505,6 +508,86 @@ class tutorRepository implements ITutorRepository {
         });
 
         last12Months.push({ month: monthYear, count });
+      }
+      return last12Months;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async last12MonthsOrderData(tutorId: string): Promise<any> {
+    try {
+      const last12Months: any[] = [];
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
+
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+
+        const courses = await CourseModel.find({ instructorId: tutorId });
+        const courseIds = courses.map((course) => course._id);
+
+        const count = await OrderModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },
+          courseId: { $in: courseIds },
+        });
+        last12Months.push({ month: monthYear, count });
+      }
+      return last12Months;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async last12MonthsUserData(tutorId:string): Promise<boolean | any | null> {
+    try {
+      const last12Months: any[] = [];
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      for (let i = 11; i >= 0; i--) {
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - i * 28
+        );
+        const startDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 28
+        );
+
+        const monthYear = endDate.toLocaleString("default", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+
+        const courses = await CourseModel.find({
+          instructorId: tutorId,
+        });
+        const courseIds = courses.map((course) => course._id);
+
+        const count = await userModel.countDocuments({
+          createdAt: { $gte: startDate, $lt: endDate },courses:{$in:courseIds}
+        });
+        last12Months.push({ month: monthYear, count });
+        console.log(last12Months);
       }
       return last12Months;
     } catch (error) {

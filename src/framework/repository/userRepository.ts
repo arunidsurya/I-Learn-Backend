@@ -16,6 +16,8 @@ import ChatModel from "../database/liveChat";
 import PremiumOrderModel from "../database/PremiumOrderModel";
 import PremiumAccountModel from "../database/PremiumAccountSchema";
 import PremiumAccount from "../../entities/premiumAccount";
+import Category from "../../entities/Categories";
+import CategoryModel from "../database/CategoryModel";
 
 
 class userRepository implements IUserRepository {
@@ -450,6 +452,17 @@ class userRepository implements IUserRepository {
       }
 
       const course = await CourseModel.findById(courseId);
+      
+if(course){
+      for (let review of course?.reviews) {
+        let presentUser = review.user;
+        
+        if (presentUser && presentUser._id=== user._id) {
+         return null
+          
+        }
+      }
+}
 
       const reviewData: any = {
         user: user,
@@ -652,6 +665,31 @@ class userRepository implements IUserRepository {
     } catch (error) {
       console.error("Error occurred while searching for courses:", error);
       return false; // Error occurred
+    }
+  }
+  async getCoursesByCategory(category: string): Promise<boolean | Course[] | null> {
+    try {
+      const courses = await CourseModel.find({category:category});
+      if(courses.length===0){
+        return null
+      }
+      return courses
+    } catch (error) {
+      console.log(error);
+      return false
+      
+    }
+  }
+  async getCategories(): Promise<boolean | Category[] | null> {
+    try {
+      const categories = await CategoryModel.find();
+      if(categories.length === 0){
+        return null
+      }
+      return categories
+    } catch (error) {
+            console.log(error);
+            return false;
     }
   }
 }

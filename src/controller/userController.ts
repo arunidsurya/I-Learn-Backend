@@ -293,7 +293,6 @@ class userController {
   }
 
   async newPayment(req: Request, res: Response, next: NextFunction) {
-    const user = req.user;
     try {
       // Create the payment intent with shipping information
       const myPayment = await stripe.paymentIntents.create({
@@ -390,7 +389,13 @@ class userController {
       if (result === false) {
         return res.json({
           success: false,
-          message: "invalid content Id",
+          message: "Error submitting review!! please try agian later",
+        });
+      }
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "Review Already addded",
         });
       }
       return res.json({
@@ -589,6 +594,56 @@ class userController {
     try {
       const result = await this.userCase.getSearchResult(searchKey);
       if (result === null) {
+        return res.json({
+          success: false,
+          message: "internal server error, please try again later",
+        });
+      }
+
+      return res.json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCoursesByCategory(req: Request, res: Response, next: NextFunction) {
+    const { category } = req.body;
+    try {
+      const result = await this.userCase.getCoursesByCategory(category);
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "No coureses found",
+        });
+      }
+      if (result === false) {
+        return res.json({
+          success: false,
+          message: "internal server error, please try again later",
+        });
+      }
+
+      return res.json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.userCase.getCategories();
+      if (result === null) {
+        return res.json({
+          success: false,
+          message: "No categories found",
+        });
+      }
+      if (result === false) {
         return res.json({
           success: false,
           message: "internal server error, please try again later",
