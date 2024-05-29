@@ -502,10 +502,6 @@ if(course){
     courseId: string
   ): Promise<boolean | null> {
     try {
-      console.log("userName :", userName);
-      console.log("userId :", userId);
-      console.log("message :", message);
-      console.log("courseId :", courseId);
       const course = await CourseModel.findById(courseId);
       if (!course) {
         return false;
@@ -533,9 +529,6 @@ if(course){
       const course = await CourseModel.findById(courseId)
         .populate("chat")
         .exec();
-
-      console.log(course?.chat);
-
       return course;
     } catch (error) {
       console.log(error);

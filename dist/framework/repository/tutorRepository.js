@@ -94,7 +94,6 @@ class tutorRepository {
                 // console.log(data);
                 const { courseTitle, instructorId, instructorName, category, description, price, estimatedPrice, totalVideos, tags, thumbnail, level, demoUrl, benefits, prerequisites, courseData, } = data;
                 const createdCourseData = yield courseData_1.default.create(courseData);
-                console.log(courseData);
                 const courseDataIds = Array.isArray(createdCourseData)
                     ? createdCourseData.map((data) => data._id)
                     : [];
@@ -284,7 +283,6 @@ class tutorRepository {
                     user: tutor,
                     answer,
                 };
-                console.log(newAnswer);
                 question.questionReplies.push(newAnswer);
                 yield courseContentData.save();
                 return true;
@@ -494,7 +492,6 @@ class tutorRepository {
                         createdAt: { $gte: startDate, $lt: endDate }, courses: { $in: courseIds }
                     });
                     last12Months.push({ month: monthYear, count });
-                    console.log(last12Months);
                 }
                 return last12Months;
             }

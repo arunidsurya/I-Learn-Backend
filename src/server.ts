@@ -5,13 +5,10 @@ require("dotenv").config();
 import http from "http";
 import { initSocketServer } from "./framework/config/socketServer";
 
-
-
 const startServer = async () => {
   try {
     const app = createServer();
-const server = http.createServer(app);
-    //cloudinary config
+    const server = http.createServer(app);
 
     cloudinary.config({
       cloud_name: process.env.CLOUD_NAME,

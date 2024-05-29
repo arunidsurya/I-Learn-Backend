@@ -2,11 +2,14 @@
   "name": "e_learning",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "nodemon dist/server.js",
+    "dev": "npm-run-all --parallel watch serve"
   },
   "author": "Arun",
   "license": "ISC",
@@ -29,8 +32,7 @@
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
     "socket.io": "^4.7.5",
-    "stripe": "^15.4.0",
-    "ts-node-dev": "^2.0.0"
+    "stripe": "^15.4.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -40,6 +42,8 @@
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.12.7",
+    "npm-run-all": "^4.1.5",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   }
 }

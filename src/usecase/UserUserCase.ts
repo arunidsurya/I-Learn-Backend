@@ -33,8 +33,7 @@ class userUserCase {
         activationCode
       );
       const activationToken = await activationTokenPromise;
-      // console.log(activationToken);
-      // console.log(activationCode);
+
 
       const subject = "Please find the below otp to activate your account";
 
@@ -57,8 +56,7 @@ class userUserCase {
   }
 
   async activateUser(activationCode: string, activationToken: string) {
-    console.log("activationToken :", activationToken);
-    console.log("activationCode :", activationCode);
+
     try {
       const newUser = await this.JwtToken.otpVerifyJwt(
         activationToken,
@@ -142,8 +140,6 @@ class userUserCase {
       activationCode
     );
     const activationToken = await activationTokenPromise;
-    // console.log(activationToken);
-    // console.log(activationCode);
 
     const subject = "Please find the below otp to confirm your account";
 
@@ -167,8 +163,7 @@ class userUserCase {
     activationToken: string
   ) {
     try {
-      // console.log("code:", activationCode);
-      // console.log("token:", activationToken);
+
       const newUser = await this.JwtToken.otpVerifyJwt(
         activationToken,
         activationCode
@@ -372,13 +367,11 @@ class userUserCase {
   }
   async createPremiumOrder(userId: string, payment_info: object) {
     try {
-      console.log("Reached here");
 
       const result = this.iUserRepository.createPremiumOrder(
         userId,
         payment_info
       );
-      console.log(result);
 
       return result;
     } catch (error) {
@@ -452,10 +445,6 @@ class userUserCase {
     message: string,
     courseId: string
   ) {
-    console.log("userName :", userName);
-    console.log("userId :", userId);
-    console.log("message :", message);
-    console.log("courseId :", courseId);
     try {
       const result = this.iUserRepository.addChat(
         userName,

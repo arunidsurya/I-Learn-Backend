@@ -110,7 +110,6 @@ class tutorRepository implements ITutorRepository {
 
       const createdCourseData = await CourseDataModel.create(courseData);
 
-      console.log(courseData);
 
       const courseDataIds = Array.isArray(createdCourseData)
         ? createdCourseData.map((data) => data._id)
@@ -332,7 +331,6 @@ class tutorRepository implements ITutorRepository {
         user: tutor,
         answer,
       };
-      console.log(newAnswer);
 
       question.questionReplies.push(newAnswer);
       await courseContentData.save();
@@ -587,7 +585,6 @@ class tutorRepository implements ITutorRepository {
           createdAt: { $gte: startDate, $lt: endDate },courses:{$in:courseIds}
         });
         last12Months.push({ month: monthYear, count });
-        console.log(last12Months);
       }
       return last12Months;
     } catch (error) {

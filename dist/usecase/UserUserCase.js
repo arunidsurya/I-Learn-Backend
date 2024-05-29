@@ -31,8 +31,6 @@ class userUserCase {
                 const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
                 const activationTokenPromise = this.JwtToken.otpGenerateJwt(user, activationCode);
                 const activationToken = yield activationTokenPromise;
-                // console.log(activationToken);
-                // console.log(activationCode);
                 const subject = "Please find the below otp to activate your account";
                 const sendmail = this.sendEmail.sendMail({
                     email,
@@ -55,8 +53,6 @@ class userUserCase {
     }
     activateUser(activationCode, activationToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("activationToken :", activationToken);
-            console.log("activationCode :", activationCode);
             try {
                 const newUser = yield this.JwtToken.otpVerifyJwt(activationToken, activationCode);
                 if (!newUser) {
@@ -132,8 +128,6 @@ class userUserCase {
             const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
             const activationTokenPromise = this.JwtToken.otpGenerateJwt(user, activationCode);
             const activationToken = yield activationTokenPromise;
-            // console.log(activationToken);
-            // console.log(activationCode);
             const subject = "Please find the below otp to confirm your account";
             const sendmail = this.sendEmail.sendMail({
                 email,
@@ -154,8 +148,6 @@ class userUserCase {
     forgotPasswordApproval(activationCode, activationToken) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // console.log("code:", activationCode);
-                // console.log("token:", activationToken);
                 const newUser = yield this.JwtToken.otpVerifyJwt(activationToken, activationCode);
                 if (!newUser) {
                     return {
@@ -363,9 +355,7 @@ class userUserCase {
     createPremiumOrder(userId, payment_info) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Reached here");
                 const result = this.iUserRepository.createPremiumOrder(userId, payment_info);
-                console.log(result);
                 return result;
             }
             catch (error) {
@@ -411,10 +401,6 @@ class userUserCase {
     }
     addChat(userName, userId, message, courseId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("userName :", userName);
-            console.log("userId :", userId);
-            console.log("message :", message);
-            console.log("courseId :", courseId);
             try {
                 const result = this.iUserRepository.addChat(userName, userId, message, courseId);
                 return result;

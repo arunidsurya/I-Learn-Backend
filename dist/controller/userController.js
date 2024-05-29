@@ -53,8 +53,6 @@ class userController {
                 if (data === null || data === void 0 ? void 0 : data.success) {
                     res.cookie("access_token", data.access_token);
                     res.cookie("refresh_token", data.refresh_token);
-                    // console.log("access_token:", data.access_token);
-                    // console.log("refresh_Token", data.refreshToken);
                     res.status(201).json({ data });
                 }
                 else {
@@ -411,7 +409,6 @@ class userController {
     addChat(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userName, userId, message, courseId } = req.body;
-            console.log(userName, userId, message, courseId);
             try {
                 const result = yield this.userCase.addChat(userName, userId, message, courseId);
                 if (result === false) {

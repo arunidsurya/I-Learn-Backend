@@ -450,10 +450,6 @@ class userRepository {
     addChat(userName, userId, message, courseId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("userName :", userName);
-                console.log("userId :", userId);
-                console.log("message :", message);
-                console.log("courseId :", courseId);
                 const course = yield CourseModel_1.default.findById(courseId);
                 if (!course) {
                     return false;
@@ -480,7 +476,6 @@ class userRepository {
                 const course = yield CourseModel_1.default.findById(courseId)
                     .populate("chat")
                     .exec();
-                console.log(course === null || course === void 0 ? void 0 : course.chat);
                 return course;
             }
             catch (error) {

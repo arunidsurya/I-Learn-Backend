@@ -12,7 +12,6 @@ const initSocketServer = (server) => {
     io.on("connection", (socket) => {
         console.log("A user is connected");
         socket.on("join_session", (data) => {
-            console.log("reached here");
             socket.join(data.courseId);
             console.log(`user logged with ${data.courseId}`);
         });
@@ -22,7 +21,6 @@ const initSocketServer = (server) => {
             socket.to(data.courseId).emit("receive_message", data);
         });
         socket.on("notification", (data) => {
-            console.log(data);
             socket.broadcast.emit("receive_notification", data);
             // socket.to(data.courseId).emit("receive_message", data);
         });

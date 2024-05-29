@@ -14,7 +14,6 @@ export const initSocketServer = (server: http.Server) => {
     console.log("A user is connected");
 
     socket.on("join_session",(data)=>{
-        console.log("reached here");
         
         socket.join(data.courseId);
         console.log(`user logged with ${data.courseId}`);
@@ -29,7 +28,6 @@ export const initSocketServer = (server: http.Server) => {
     });
 
         socket.on("notification", (data) => {
-              console.log(data);
             socket.broadcast.emit("receive_notification", data);
           // socket.to(data.courseId).emit("receive_message", data);
         });

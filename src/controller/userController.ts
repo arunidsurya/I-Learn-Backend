@@ -50,8 +50,6 @@ class userController {
       if (data?.success) {
         res.cookie("access_token", data.access_token);
         res.cookie("refresh_token", data.refresh_token);
-        // console.log("access_token:", data.access_token);
-        // console.log("refresh_Token", data.refreshToken);
 
         res.status(201).json({ data });
       } else {
@@ -410,7 +408,6 @@ class userController {
   async addChat(req: Request, res: Response, next: NextFunction) {
     const { userName, userId, message, courseId } = req.body;
 
-    console.log(userName, userId, message, courseId);
 
     try {
       const result = await this.userCase.addChat(
