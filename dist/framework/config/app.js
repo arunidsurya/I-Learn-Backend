@@ -50,8 +50,6 @@ const createServer = () => {
         app.use((0, cookie_parser_1.default)());
         app.use((0, cors_1.default)({
             origin: process.env.ORIGIN,
-            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            allowedHeaders: "Content-Type,Authorization",
             credentials: true,
         }));
         app.use("/api/v1", userRoutes_1.default);
