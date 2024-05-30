@@ -26,7 +26,12 @@ class tutorController {
       // console.log("data :", data);
 
       if (data?.success) {
-        res.cookie("tutor_token", data.token);
+        res.cookie("tutor_token", data.token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        // res.cookie("tutor_token", data.token);
 
         res.status(201).json({ data });
       } else {
@@ -45,7 +50,13 @@ class tutorController {
       console.log("tutor-email:", email);
 
       redis.del(`tutor-${email}`);
-      res.cookie("tutor_token", "", { maxAge: 1 });
+              res.cookie("tutor_token", "", {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                maxAge:1
+              });
+      // res.cookie("tutor_token", "", { maxAge: 1 });
 
       res.status(200).json({
         success: true,

@@ -51,8 +51,18 @@ class userController {
                 const data = yield this.userCase.loginUser(email, password);
                 // console.log("data :", data);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    res.cookie("access_token", data.access_token);
-                    res.cookie("refresh_token", data.refresh_token);
+                    res.cookie("access_token", data.access_token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    res.cookie("refresh_token", data.refresh_token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    // res.cookie("access_token", data.access_token);
+                    // res.cookie("refresh_token", data.refresh_token);
                     res.status(201).json({ data });
                 }
                 else {
@@ -71,8 +81,20 @@ class userController {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
-                res.cookie("access_token", "", { maxAge: 1 });
-                res.cookie("refresh_token", "", { maxAge: 1 });
+                res.cookie("access_token", "", {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none",
+                    maxAge: 1,
+                });
+                res.cookie("refresh_token", "", {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none",
+                    maxAge: 1,
+                });
+                // res.cookie("access_token", "", { maxAge: 1 });
+                // res.cookie("refresh_token", "", { maxAge: 1 });
                 const email = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.email) || "";
                 redis_1.redis.del(`user-${email}`);
                 res.status(200).json({
@@ -173,8 +195,18 @@ class userController {
                 const { name, email, avatar } = req.body;
                 const data = yield this.userCase.googleAuth(name, email, avatar);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    res.cookie("access_token", data.access_token);
-                    res.cookie("refresh_token", data.refresh_token);
+                    res.cookie("access_token", data.access_token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    res.cookie("refresh_token", data.refresh_token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    // res.cookie("access_token", data.access_token);
+                    // res.cookie("refresh_token", data.refresh_token);
                     res.status(201).json({ data });
                 }
                 else {

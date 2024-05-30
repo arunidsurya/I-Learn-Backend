@@ -102,8 +102,8 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 // Set the new access token in the cookie
                 res.cookie("access_token", newAccessToken, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === "production", // Set to true in production
-                    sameSite: "strict",
+                    secure: true, // Set to true in production
+                    sameSite: "none",
                 });
                 // Proceed to next function
                 return next();

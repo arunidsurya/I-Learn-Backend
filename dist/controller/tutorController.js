@@ -33,7 +33,12 @@ class tutorController {
                 const data = yield this.tutorCase.loginTutor(email, password);
                 // console.log("data :", data);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    res.cookie("tutor_token", data.token);
+                    res.cookie("tutor_token", data.token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    // res.cookie("tutor_token", data.token);
                     res.status(201).json({ data });
                 }
                 else {
@@ -55,7 +60,13 @@ class tutorController {
                 const email = ((_a = req.tutor) === null || _a === void 0 ? void 0 : _a.email) || "";
                 console.log("tutor-email:", email);
                 redis_1.redis.del(`tutor-${email}`);
-                res.cookie("tutor_token", "", { maxAge: 1 });
+                res.cookie("tutor_token", "", {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none",
+                    maxAge: 1
+                });
+                // res.cookie("tutor_token", "", { maxAge: 1 });
                 res.status(200).json({
                     success: true,
                     message: "Logged out successfully",

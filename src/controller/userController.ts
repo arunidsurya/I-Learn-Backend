@@ -48,8 +48,18 @@ class userController {
       // console.log("data :", data);
 
       if (data?.success) {
-        res.cookie("access_token", data.access_token);
-        res.cookie("refresh_token", data.refresh_token);
+        res.cookie("access_token", data.access_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        res.cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        // res.cookie("access_token", data.access_token);
+        // res.cookie("refresh_token", data.refresh_token);
 
         res.status(201).json({ data });
       } else {
@@ -64,8 +74,20 @@ class userController {
   }
   async logoutUser(req: Request, res: Response, next: NextFunction) {
     try {
-      res.cookie("access_token", "", { maxAge: 1 });
-      res.cookie("refresh_token", "", { maxAge: 1 });
+      res.cookie("access_token", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 1,
+      });
+      res.cookie("refresh_token", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 1,
+      });
+      // res.cookie("access_token", "", { maxAge: 1 });
+      // res.cookie("refresh_token", "", { maxAge: 1 });
       const email = req.user?.email || "";
       redis.del(`user-${email}`);
       res.status(200).json({
@@ -168,8 +190,18 @@ class userController {
       const data = await this.userCase.googleAuth(name, email, avatar);
 
       if (data?.success) {
-        res.cookie("access_token", data.access_token);
-        res.cookie("refresh_token", data.refresh_token);
+        res.cookie("access_token", data.access_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        res.cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        // res.cookie("access_token", data.access_token);
+        // res.cookie("refresh_token", data.refresh_token);
 
         res.status(201).json({ data });
       } else {
@@ -407,7 +439,6 @@ class userController {
   }
   async addChat(req: Request, res: Response, next: NextFunction) {
     const { userName, userId, message, courseId } = req.body;
-
 
     try {
       const result = await this.userCase.addChat(

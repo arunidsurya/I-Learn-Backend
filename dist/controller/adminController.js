@@ -26,7 +26,12 @@ class adminController {
             const { email, password } = req.body;
             const result = yield this.adminCase.loginAdmin(email, password);
             if (result === null || result === void 0 ? void 0 : result.success) {
-                res.cookie("admin_AccessToken", result.token);
+                res.cookie("admin_AccessToken", result.token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none",
+                });
+                // res.cookie("admin_AccessToken", result.token);
                 res.json(result);
             }
         });
@@ -35,7 +40,13 @@ class adminController {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
-                res.cookie("admin_AccessToken", "", { maxAge: 1 });
+                res.cookie("admin_AccessToken", "", {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none",
+                    maxAge: 1
+                });
+                // res.cookie("admin_AccessToken", "", { maxAge: 1 });
                 const email = ((_a = req.admin) === null || _a === void 0 ? void 0 : _a.email) || "";
                 redis_1.redis.del(email);
                 res.status(200).json({

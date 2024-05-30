@@ -20,13 +20,24 @@ class adminController {
     const { email, password } = req.body;
     const result = await this.adminCase.loginAdmin(email, password);
     if (result?.success) {
-      res.cookie("admin_AccessToken", result.token);
+      res.cookie("admin_AccessToken", result.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+      // res.cookie("admin_AccessToken", result.token);
       res.json(result);
     }
   }
   async logoutAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      res.cookie("admin_AccessToken", "", { maxAge: 1 });
+      res.cookie("admin_AccessToken", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge:1
+      });
+      // res.cookie("admin_AccessToken", "", { maxAge: 1 });
       const email = req.admin?.email || "";
       redis.del(email);
       res.status(200).json({
