@@ -22,7 +22,6 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const app = (0, app_1.createServer)();
         const server = http_1.default.createServer(app);
-        //cloudinary config
         cloudinary_1.v2.config({
             cloud_name: process.env.CLOUD_NAME,
             api_key: process.env.CLOUD_API_KEY,
