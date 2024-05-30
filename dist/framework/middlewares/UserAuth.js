@@ -44,7 +44,7 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     const access_token = req.cookies.access_token;
     const refresh_token = req.cookies.refresh_token;
     if (!access_token) {
-        // console.log("unauthorisez-1");
+        console.log("unauthorisez-1");
         return res
             .status(401)
             .json({ success: false, message: "Unauthorized - No token provided" });
@@ -59,13 +59,13 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (currentUserData === null || currentUserData === void 0 ? void 0 : currentUserData.isBlocked) {
             res.clearCookie("access_token");
             res.clearCookie("refresh_token");
-            // console.log("unauthorisez-3");
+            console.log("unauthorisez-3");
             return res
                 .status(401)
                 .send({ success: false, message: "Profile is blocked" });
         }
         if (!user) {
-            // console.log("unauthorisez-2");
+            console.log("unauthorisez-2");
             return res
                 .status(401)
                 .send({ success: false, message: "User not found" });

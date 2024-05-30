@@ -22,7 +22,7 @@ export const isAuthenticated = async (
   const refresh_token = req.cookies.refresh_token as string;
 
   if (!access_token) {
-    // console.log("unauthorisez-1");
+    console.log("unauthorisez-1");
 
     return res
       .status(401)
@@ -44,7 +44,7 @@ export const isAuthenticated = async (
     if(currentUserData?.isBlocked){
         res.clearCookie("access_token");
         res.clearCookie("refresh_token");
-        // console.log("unauthorisez-3");
+        console.log("unauthorisez-3");
         return res
           .status(401)
           .send({ success: false, message: "Profile is blocked" });
@@ -52,7 +52,7 @@ export const isAuthenticated = async (
     
 
     if (!user) {
-      // console.log("unauthorisez-2");
+      console.log("unauthorisez-2");
       return res
         .status(401)
         .send({ success: false, message: "User not found" });
