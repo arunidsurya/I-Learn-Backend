@@ -25,7 +25,8 @@ export const createServer = () => {
     app.use(cookieParser());
     app.use(
       cors({
-        origin: process.env.ORIGIN,
+        // origin: process.env.ORIGIN,
+        origin:"https://i-learn-frontend.vercel.app/",
         credentials: true,
       })
     );
