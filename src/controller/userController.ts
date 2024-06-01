@@ -41,6 +41,7 @@ class userController {
     }
   }
   async loginUser(req: Request, res: Response, next: NextFunction) {
+    
     try {
       const { email, password } = req.body;
 
