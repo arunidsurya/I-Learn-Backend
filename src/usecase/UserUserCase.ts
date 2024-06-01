@@ -114,7 +114,7 @@ class userUserCase {
         password
       );
 
-      if (!proToken) {
+      if (proToken === null) {
         console.log("invalid email or paddword");
         
         return {

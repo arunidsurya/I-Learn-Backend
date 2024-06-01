@@ -70,8 +70,7 @@ class tutorRepository implements ITutorRepository {
     try {
       const isPasswordMatch = await tutor.comparePassword(password);
       if (!isPasswordMatch) {
-        // Check if password does not match
-        return null; // Return null if password does not match
+        return null;
       } else {
         const token = await this.JwtToken.SignTutorJwt(tutor);
         redis.set(`tutor-${tutor.email}`, JSON.stringify(tutor) as any);

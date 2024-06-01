@@ -56,11 +56,11 @@ class userController {
           secure: true,
           sameSite: "none",
         });
-        res.cookie("refresh_token", data.refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        });
+        // res.cookie("refresh_token", data.refresh_token, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        // });
         // res.cookie("access_token", data.access_token);
         // res.cookie("refresh_token", data.refresh_token);
 
