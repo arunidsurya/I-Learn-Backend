@@ -92,12 +92,16 @@ class userUserCase {
       const user = await this.iUserRepository.findByEmail(email);
 
       if (!user) {
+        console.log("no user found");
+        
         return {
           status: 500,
           success: false,
           message: "Invalid email or password!!",
         };
       } else if (user.isBlocked) {
+        console.log("user is blocked");
+        
         return {
           status: 500,
           success: false,
@@ -111,6 +115,8 @@ class userUserCase {
       );
 
       if (!proToken) {
+        console.log("invalid email or paddword");
+        
         return {
           status: 500,
           success: false,

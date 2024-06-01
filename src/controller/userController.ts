@@ -49,6 +49,8 @@ class userController {
 
 
       if (data?.success) {
+        console.log("login success");
+        
         res.cookie("access_token", data.access_token, {
           httpOnly: true,
           secure: true,
@@ -62,11 +64,15 @@ class userController {
         // res.cookie("access_token", data.access_token);
         // res.cookie("refresh_token", data.refresh_token);
 
-        res.status(201).json({ data });
+        return res.status(201).json({ data });
       } else {
-        res.json({ data });
+        console.log("login failed");
+        
+        return res.json({ data });
       }
     } catch (error: any) {
+      console.log(error);
+      
       res.status(500).json({
         success: false,
         message: "An error occurred",
