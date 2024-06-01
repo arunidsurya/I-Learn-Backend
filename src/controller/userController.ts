@@ -40,58 +40,15 @@ class userController {
       console.log(error);
     }
   }
-  // async loginUser(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const { email, password } = req.body;
-
-  //     const data = await this.userCase.loginUser(email, password);
-
-  //     if (data?.success) {
-  //       console.log("login success");
-
-  //       res.cookie("access_token", data.access_token, {
-  //         httpOnly: true,
-  //         secure: true,
-  //         sameSite: "none",
-  //       });
-
-  //       res.cookie("refresh_token", data.refresh_token, {
-  //         httpOnly: true,
-  //         secure: true,
-  //         sameSite: "none",
-  //       });
-
-  //       return res.status(201).json({ data });
-  //     } else {
-  //       console.log("login failed");
-
-  //       return res.json({ data });
-  //     }
-  //   } catch (error: any) {
-  //     console.error(error);
-
-  //     res.status(500).json({
-  //       success: false,
-  //       message: "An error occurred",
-  //     });
-  //   }
-  // }
-
-  async loginUser(req: Request, res: Response,next:NextFunction) {
+  async loginUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
 
-      // Mock data for demonstration
-      const data = {
-        success: true,
-        access_token: "mock_access_token",
-        refresh_token: "mock_refresh_token",
-      };
+      const data = await this.userCase.loginUser(email, password);
 
-      if (data.success) {
-        console.log("Login success");
+      if (data?.success) {
+        console.log("login success");
 
-        // Set cookies with additional parameters using the cookie method from cookie-parser
         res.cookie("access_token", data.access_token, {
           httpOnly: true,
           secure: true,
@@ -106,7 +63,7 @@ class userController {
 
         return res.status(201).json({ data });
       } else {
-        console.log("Login failed");
+        console.log("login failed");
 
         return res.json({ data });
       }
@@ -119,6 +76,49 @@ class userController {
       });
     }
   }
+
+  // async loginUser(req: Request, res: Response,next:NextFunction) {
+  //   try {
+  //     const { email, password } = req.body;
+
+  //     // Mock data for demonstration
+  //     const data = {
+  //       success: true,
+  //       access_token: "mock_access_token",
+  //       refresh_token: "mock_refresh_token",
+  //     };
+
+  //     if (data.success) {
+  //       console.log("Login success");
+
+  //       // Set cookies with additional parameters using the cookie method from cookie-parser
+  //       res.cookie("access_token", data.access_token, {
+  //         httpOnly: true,
+  //         secure: true,
+  //         sameSite: "none",
+  //       });
+
+  //       res.cookie("refresh_token", data.refresh_token, {
+  //         httpOnly: true,
+  //         secure: true,
+  //         sameSite: "none",
+  //       });
+
+  //       return res.status(201).json({ data });
+  //     } else {
+  //       console.log("Login failed");
+
+  //       return res.json({ data });
+  //     }
+  //   } catch (error: any) {
+  //     console.error(error);
+
+  //     res.status(500).json({
+  //       success: false,
+  //       message: "An error occurred",
+  //     });
+  //   }
+  // }
 
   async logoutUser(req: Request, res: Response, next: NextFunction) {
     try {
