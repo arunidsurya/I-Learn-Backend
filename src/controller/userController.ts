@@ -90,10 +90,17 @@ class userController {
         return res
           .status(201)
           .json({ data })
-          .setHeader("Set-Cookie", [
-            `access_token=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-            `refresh_token=${data.refresh_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-          ]);
+          .cookie("access_token", data.access_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        .cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+
       } else {
         console.log("login failed");
 
