@@ -49,7 +49,8 @@ const createServer = () => {
         app.use((0, express_1.urlencoded)({ extended: true }));
         app.use((0, cookie_parser_1.default)());
         app.use((0, cors_1.default)({
-            origin: process.env.ORIGIN,
+            // origin: process.env.ORIGIN,
+            origin: "*",
             credentials: true,
         }));
         app.use("/api/v1", userRoutes_1.default);
