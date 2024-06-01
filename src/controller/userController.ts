@@ -47,6 +47,7 @@ class userController {
       const data = await this.userCase.loginUser(email, password);
       // console.log("data :", data);
 
+
       if (data?.success) {
         res.cookie("access_token", data.access_token, {
           httpOnly: true,

@@ -61,14 +61,14 @@ class userRepository {
                 const isPasswordMatch = yield user.comparePassword(password);
                 // console.log("match:", isPasswordMatch);
                 if (!isPasswordMatch) {
-                    // Check if password does not match
+                    console.log("error1");
                     return null; // Return null if password does not match
                 }
                 else {
                     const access_token = yield this.JwtToken.SignJwt(user);
                     const refresh_token = yield this.JwtToken.refreshToken(user);
                     redis_1.redis.set(`user-${user.email}`, JSON.stringify(user));
-                    // console.log(token);
+                    console.log("success");
                     return { access_token, refresh_token };
                 }
             }
@@ -585,7 +585,10 @@ class userRepository {
             try {
                 const escapedSearchKey = searchKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
                 const regex = new RegExp(escapedSearchKey, "i");
-                const result = yield CourseModel_1.default.find({ courseTitle: regex, approved: true });
+                const result = yield CourseModel_1.default.find({
+                    courseTitle: regex,
+                    approved: true,
+                });
                 if (result.length === 0) {
                     return null; // No matches found
                 }

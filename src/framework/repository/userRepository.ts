@@ -19,7 +19,6 @@ import PremiumAccount from "../../entities/premiumAccount";
 import Category from "../../entities/Categories";
 import CategoryModel from "../database/CategoryModel";
 
-
 class userRepository implements IUserRepository {
   JwtToken = new JwtTokenService();
 
@@ -56,13 +55,14 @@ class userRepository implements IUserRepository {
       // console.log("match:", isPasswordMatch);
 
       if (!isPasswordMatch) {
-        // Check if password does not match
+        console.log("error1");
+
         return null; // Return null if password does not match
       } else {
         const access_token = await this.JwtToken.SignJwt(user);
         const refresh_token = await this.JwtToken.refreshToken(user);
         redis.set(`user-${user.email}`, JSON.stringify(user) as any);
-        // console.log(token);
+        console.log("success");
         return { access_token, refresh_token };
       }
     } catch (error) {
@@ -452,17 +452,16 @@ class userRepository implements IUserRepository {
       }
 
       const course = await CourseModel.findById(courseId);
-      
-if(course){
-      for (let review of course?.reviews) {
-        let presentUser = review.user;
-        
-        if (presentUser && presentUser._id=== user._id) {
-         return null
-          
+
+      if (course) {
+        for (let review of course?.reviews) {
+          let presentUser = review.user;
+
+          if (presentUser && presentUser._id === user._id) {
+            return null;
+          }
         }
       }
-}
 
       const reviewData: any = {
         user: user,
@@ -648,7 +647,10 @@ if(course){
       const escapedSearchKey = searchKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const regex = new RegExp(escapedSearchKey, "i");
 
-      const result = await CourseModel.find({ courseTitle: regex,approved:true });
+      const result = await CourseModel.find({
+        courseTitle: regex,
+        approved: true,
+      });
 
       if (result.length === 0) {
         return null; // No matches found
@@ -660,29 +662,30 @@ if(course){
       return false; // Error occurred
     }
   }
-  async getCoursesByCategory(category: string): Promise<boolean | Course[] | null> {
+  async getCoursesByCategory(
+    category: string
+  ): Promise<boolean | Course[] | null> {
     try {
-      const courses = await CourseModel.find({category:category});
-      if(courses.length===0){
-        return null
+      const courses = await CourseModel.find({ category: category });
+      if (courses.length === 0) {
+        return null;
       }
-      return courses
+      return courses;
     } catch (error) {
       console.log(error);
-      return false
-      
+      return false;
     }
   }
   async getCategories(): Promise<boolean | Category[] | null> {
     try {
       const categories = await CategoryModel.find();
-      if(categories.length === 0){
-        return null
+      if (categories.length === 0) {
+        return null;
       }
-      return categories
+      return categories;
     } catch (error) {
-            console.log(error);
-            return false;
+      console.log(error);
+      return false;
     }
   }
 }
