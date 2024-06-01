@@ -40,6 +40,43 @@ class userController {
       console.log(error);
     }
   }
+  // async loginUser(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { email, password } = req.body;
+
+  //     const data = await this.userCase.loginUser(email, password);
+
+  //     if (data?.success) {
+  //       console.log("login success");
+
+  //       res.cookie("access_token", data.access_token, {
+  //         httpOnly: true,
+  //         secure: true,
+  //         sameSite: "none",
+  //       });
+
+  //       res.cookie("refresh_token", data.refresh_token, {
+  //         httpOnly: true,
+  //         secure: true,
+  //         sameSite: "none",
+  //       });
+
+  //       return res.status(201).json({ data });
+  //     } else {
+  //       console.log("login failed");
+
+  //       return res.json({ data });
+  //     }
+  //   } catch (error: any) {
+  //     console.error(error);
+
+  //     res.status(500).json({
+  //       success: false,
+  //       message: "An error occurred",
+  //     });
+  //   }
+  // }
+
   async loginUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
@@ -49,17 +86,18 @@ class userController {
       if (data?.success) {
         console.log("login success");
 
-        res.cookie("access_token", data.access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        });
-
-        res.cookie("refresh_token", data.refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        });
+        // Set both cookies in a single statement
+        res
+          .cookie("access_token", data.access_token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+          })
+          .cookie("refresh_token", data.refresh_token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+          });
 
         return res.status(201).json({ data });
       } else {
