@@ -77,7 +77,7 @@ class userController {
   //   }
   // }
 
-  async loginUser(req: Request, res: Response, next: NextFunction) {
+  async loginUser(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
 
@@ -86,21 +86,20 @@ class userController {
       if (data?.success) {
         console.log("login success");
 
-        // Set cookies in the response headers
-        return res
-          .status(201)
-          .json({ data })
-          .cookie("access_token", data.access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .cookie("refresh_token", data.refresh_token, {
+        // Set cookies using the cookie method
+        res.cookie("access_token", data.access_token, {
           httpOnly: true,
           secure: true,
           sameSite: "none",
         });
 
+        res.cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+
+        return res.status(201).json({ data });
       } else {
         console.log("login failed");
 
@@ -115,7 +114,6 @@ class userController {
       });
     }
   }
-
   async logoutUser(req: Request, res: Response, next: NextFunction) {
     try {
       res.cookie("access_token", "", {
