@@ -87,12 +87,13 @@ class userController {
         console.log("login success");
 
         // Set cookies in the response headers
-        res.setHeader("Set-Cookie", [
-          `access_token=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-          `refresh_token=${data.refresh_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-        ]);
-
-        return res.status(201).json({ data });
+        return res
+          .status(201)
+          .json({ data })
+          .setHeader("Set-Cookie", [
+            `access_token=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+            `refresh_token=${data.refresh_token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+          ]);
       } else {
         console.log("login failed");
 
