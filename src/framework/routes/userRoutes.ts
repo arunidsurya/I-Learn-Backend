@@ -7,6 +7,7 @@ import JwtTokenService from "../services/JwtToken";
 import { isAuthenticated } from "../middlewares/UserAuth";
 import { isPremium } from "../middlewares/premiumAccountAuth";
 
+
 const userRouter = express.Router();
 const repository = new userRepository();
 const sendEmail = new sendMail();
