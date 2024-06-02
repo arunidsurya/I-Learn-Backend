@@ -53,11 +53,11 @@ class userController {
           sameSite: "none",
         });
 
-        // res.cookie("refresh_token", data.refresh_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        // });
+        res.cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
 
         return res.status(201).json({ data });
       } else {
