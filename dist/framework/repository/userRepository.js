@@ -57,18 +57,16 @@ class userRepository {
     }
     loginUser(user, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("Reached Repository");
             try {
                 const isPasswordMatch = yield user.comparePassword(password);
-                // console.log("match:", isPasswordMatch);
                 if (!isPasswordMatch) {
-                    console.log("error1");
-                    return null; // Return null if password does not match
+                    return null;
                 }
                 else {
                     const access_token = yield this.JwtToken.SignJwt(user);
                     const refresh_token = yield this.JwtToken.refreshToken(user);
                     redis_1.redis.set(`user-${user.email}`, JSON.stringify(user));
-                    console.log("success");
                     return { access_token, refresh_token };
                 }
             }

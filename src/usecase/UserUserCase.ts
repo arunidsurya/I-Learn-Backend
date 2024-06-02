@@ -88,7 +88,7 @@ class userUserCase {
   }
   async loginUser(email: string, password: string) {
     try {
-      // console.log(email);
+      console.log("Reached usecase");
       const user = await this.iUserRepository.findByEmail(email);
 
       if (!user) {

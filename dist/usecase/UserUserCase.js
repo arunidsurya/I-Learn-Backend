@@ -82,7 +82,7 @@ class userUserCase {
     loginUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // console.log(email);
+                console.log("Reached usecase");
                 const user = yield this.iUserRepository.findByEmail(email);
                 if (!user) {
                     console.log("no user found");
@@ -101,7 +101,7 @@ class userUserCase {
                     };
                 }
                 const proToken = yield this.iUserRepository.loginUser(user, email, password);
-                if (!proToken) {
+                if (proToken === null) {
                     console.log("invalid email or paddword");
                     return {
                         status: 500,

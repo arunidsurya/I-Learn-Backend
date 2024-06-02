@@ -50,6 +50,8 @@ class userRepository implements IUserRepository {
     email: string,
     password: string
   ): Promise<{ access_token: string; refresh_token: string } | null> {
+    console.log("Reached Repository");
+    
     try {
       const isPasswordMatch = await user.comparePassword(password);
 

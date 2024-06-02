@@ -6,6 +6,7 @@ import adminRouter from "../routes/adminRoutes";
 import tutorRouter from "../routes/tutorRoutes";
 import errorRouter from "../routes/errorRouter";
 import errorHandler from "../middlewares/errorHandler";
+import { request } from "http";
 require("dotenv").config();
 
 class CustomError extends Error {
@@ -30,6 +31,7 @@ export const createServer = () => {
         credentials: true,
       })
     );
+
     app.use("/api/v1", userRouter);
     app.use("/api/v1", adminRouter);
     app.use("/api/v1", tutorRouter);

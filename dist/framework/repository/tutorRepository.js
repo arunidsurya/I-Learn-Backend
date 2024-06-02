@@ -72,8 +72,7 @@ class tutorRepository {
             try {
                 const isPasswordMatch = yield tutor.comparePassword(password);
                 if (!isPasswordMatch) {
-                    // Check if password does not match
-                    return null; // Return null if password does not match
+                    return null;
                 }
                 else {
                     const token = yield this.JwtToken.SignTutorJwt(tutor);
