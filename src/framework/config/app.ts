@@ -26,7 +26,8 @@ export const createServer = () => {
     app.use(cookieParser());
     app.use(
       cors({
-        origin: process.env.ORIGIN,
+        // origin: process.env.ORIGIN,
+        origin:'*',
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
       })
