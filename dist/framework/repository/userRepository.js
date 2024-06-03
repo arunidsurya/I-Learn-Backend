@@ -57,7 +57,6 @@ class userRepository {
     }
     loginUser(user, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("Reached Repository");
             try {
                 const isPasswordMatch = yield user.comparePassword(password);
                 if (!isPasswordMatch) {

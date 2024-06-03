@@ -34,7 +34,6 @@ class userUserCase {
       );
       const activationToken = await activationTokenPromise;
 
-
       const subject = "Please find the below otp to activate your account";
 
       const sendmail = this.sendEmail.sendMail({
@@ -56,7 +55,6 @@ class userUserCase {
   }
 
   async activateUser(activationCode: string, activationToken: string) {
-
     try {
       const newUser = await this.JwtToken.otpVerifyJwt(
         activationToken,
@@ -87,19 +85,12 @@ class userUserCase {
     }
   }
   async loginUser(email: string, password: string) {
-    console.log(email);
-    console.log(password);
-    
-    
     try {
-      console.log("Reached usecase");
       const user = await this.iUserRepository.findByEmail(email);
-      console.log(user);
-      
 
       if (!user) {
         console.log("no user found");
-        
+
         return {
           status: 500,
           success: false,
@@ -107,7 +98,7 @@ class userUserCase {
         };
       } else if (user.isBlocked) {
         console.log("user is blocked");
-        
+
         return {
           status: 500,
           success: false,
@@ -122,7 +113,7 @@ class userUserCase {
 
       if (proToken === null) {
         console.log("invalid email or paddword");
-        
+
         return {
           status: 500,
           success: false,
@@ -175,7 +166,6 @@ class userUserCase {
     activationToken: string
   ) {
     try {
-
       const newUser = await this.JwtToken.otpVerifyJwt(
         activationToken,
         activationCode
@@ -379,7 +369,6 @@ class userUserCase {
   }
   async createPremiumOrder(userId: string, payment_info: object) {
     try {
-
       const result = this.iUserRepository.createPremiumOrder(
         userId,
         payment_info
