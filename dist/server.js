@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./framework/config/app");
+const app_1 = __importDefault(require("./framework/config/app"));
 const connnectDB_1 = require("./framework/config/connnectDB");
 const cloudinary_1 = require("cloudinary");
 require("dotenv").config();
@@ -20,7 +20,7 @@ const http_1 = __importDefault(require("http"));
 const socketServer_1 = require("./framework/config/socketServer");
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const app = (0, app_1.createServer)();
+        const app = (0, app_1.default)();
         const server = http_1.default.createServer(app);
         cloudinary_1.v2.config({
             cloud_name: process.env.CLOUD_NAME,

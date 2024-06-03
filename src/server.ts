@@ -1,4 +1,4 @@
-import { createServer } from "./framework/config/app";
+import  createServer  from "./framework/config/app";
 import { connectDB } from "./framework/config/connnectDB";
 import { v2 as cloudinary } from "cloudinary";
 require("dotenv").config();
