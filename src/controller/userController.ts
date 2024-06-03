@@ -47,23 +47,7 @@ class userController {
       const data = await this.userCase.loginUser(email, password);
 
       if (data?.success) {
-        // res.cookie("access_token", data.access_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        // });
-
-        // res.cookie("refresh_token", data.refresh_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        // });
-
-        return res
-          .cookie("access_token", data.access_token, {
-            secure: true,
-            sameSite: "none",
-          })
+        res
           .cookie("refresh_token", data.refresh_token, {
             secure: true,
             sameSite: "none",

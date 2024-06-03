@@ -104,11 +104,7 @@ class userUserCase {
                     };
                 }
                 const proToken = yield this.iUserRepository.loginUser(user, email, password);
-<<<<<<< HEAD
                 if (proToken === null) {
-=======
-                if (!proToken) {
->>>>>>> bugfix/login-route
                     console.log("invalid email or paddword");
                     return {
                         status: 500,
