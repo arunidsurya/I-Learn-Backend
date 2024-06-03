@@ -19,7 +19,7 @@ class JwtTokenService {
             const token = jsonwebtoken_1.default.sign({
                 user,
             }, process.env.ACTIVATION_SECRET, {
-                expiresIn: "5m",
+                expiresIn: "15m",
             });
             return token;
         });

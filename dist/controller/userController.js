@@ -46,15 +46,21 @@ class userController {
     }
     loginUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log("reached controller")
             try {
                 const { email, password } = req.body;
                 const data = yield this.userCase.loginUser(email, password);
                 if (data === null || data === void 0 ? void 0 : data.success) {
+<<<<<<< HEAD
+=======
+                    console.log("login success");
+>>>>>>> bugfix/login-route
                     // res.cookie("access_token", data.access_token, {
                     //   httpOnly: true,
                     //   secure: true,
                     //   sameSite: "none",
                     // });
+<<<<<<< HEAD
                     // res.cookie("refresh_token", data.refresh_token, {
                     //   httpOnly: true,
                     //   secure: true,
@@ -73,11 +79,28 @@ class userController {
                         .json(data);
                 }
                 else {
+=======
+                    res.cookie("refresh_token", data.refresh_token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    // res.cookie("access_token", data.access_token);
+                    // res.cookie("refresh_token", data.refresh_token);
+                    return res.status(201).json({ data });
+                }
+                else {
+                    console.log("login failed");
+>>>>>>> bugfix/login-route
                     return res.json({ data });
                 }
             }
             catch (error) {
+<<<<<<< HEAD
                 console.error(error);
+=======
+                console.log(error);
+>>>>>>> bugfix/login-route
                 res.status(500).json({
                     success: false,
                     message: "An error occurred",

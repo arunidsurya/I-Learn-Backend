@@ -12,7 +12,7 @@ class JwtTokenService implements IjwtToken {
       },
       process.env.ACTIVATION_SECRET as Secret,
       {
-        expiresIn: "5m",
+        expiresIn: "15m",
       }
     );
 
