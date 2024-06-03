@@ -41,44 +41,44 @@ class userController {
     }
   }
   async loginUser(req: Request, res: Response, next: NextFunction) {
-    console.log("reached controller")
-    // try {
-    //   const { email, password } = req.body;
+    // console.log("reached controller")
+    try {
+      const { email, password } = req.body;
 
-    //   const data = await this.userCase.loginUser(email, password);
-    //   // console.log("data :", data);
+      const data = await this.userCase.loginUser(email, password);
+      // console.log("data :", data);
 
 
-    //   if (data?.success) {
-    //     console.log("login success");
+      if (data?.success) {
+        console.log("login success");
         
-    //     res.cookie("access_token", data.access_token, {
-    //       httpOnly: true,
-    //       secure: true,
-    //       sameSite: "none",
-    //     });
-    //     res.cookie("refresh_token", data.refresh_token, {
-    //       httpOnly: true,
-    //       secure: true,
-    //       sameSite: "none",
-    //     });
-    //     // res.cookie("access_token", data.access_token);
-    //     // res.cookie("refresh_token", data.refresh_token);
+        // res.cookie("access_token", data.access_token, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        // });
+        res.cookie("refresh_token", data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        // res.cookie("access_token", data.access_token);
+        // res.cookie("refresh_token", data.refresh_token);
 
-    //     return res.status(201).json({ data });
-    //   } else {
-    //     console.log("login failed");
+        return res.status(201).json({ data });
+      } else {
+        console.log("login failed");
         
-    //     return res.json({ data });
-    //   }
-    // } catch (error: any) {
-    //   console.log(error);
+        return res.json({ data });
+      }
+    } catch (error: any) {
+      console.log(error);
       
-    //   res.status(500).json({
-    //     success: false,
-    //     message: "An error occurred",
-    //   });
-    // }
+      res.status(500).json({
+        success: false,
+        message: "An error occurred",
+      });
+    }
   }
   async logoutUser(req: Request, res: Response, next: NextFunction) {
     try {
