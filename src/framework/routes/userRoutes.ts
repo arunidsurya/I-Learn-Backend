@@ -24,10 +24,6 @@ userRouter.post("/user/login", (req, res, next) => {
   controller.loginUser(req, res, next);
 });
 
-userRouter.post("/user/new-login", (req, res, next) => {
-  controller.loginUser(req, res, next);
-});
-
 userRouter.get("/user/logout", isAuthenticated, (req, res, next) => {
   controller.logoutUser(req, res, next);
 });

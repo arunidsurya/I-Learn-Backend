@@ -21,6 +21,7 @@ export const isAuthenticated = async (
   const access_token = req.headers.authorization?.split(" ")[1] as string;
   const refresh_token = req.cookies.refresh_token as string;
 
+  
   if (!access_token) {
     console.log("unauthorized-1");
 

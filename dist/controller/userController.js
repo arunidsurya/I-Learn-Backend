@@ -46,16 +46,18 @@ class userController {
     }
     loginUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log("reached controller")
             try {
                 const { email, password } = req.body;
                 const data = yield this.userCase.loginUser(email, password);
                 // console.log("data :", data);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    res.cookie("access_token", data.access_token, {
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: "none",
-                    });
+                    console.log("login success");
+                    // res.cookie("access_token", data.access_token, {
+                    //   httpOnly: true,
+                    //   secure: true,
+                    //   sameSite: "none",
+                    // });
                     res.cookie("refresh_token", data.refresh_token, {
                         httpOnly: true,
                         secure: true,
@@ -63,13 +65,15 @@ class userController {
                     });
                     // res.cookie("access_token", data.access_token);
                     // res.cookie("refresh_token", data.refresh_token);
-                    res.status(201).json({ data });
+                    return res.status(201).json({ data });
                 }
                 else {
-                    res.json({ data });
+                    console.log("login failed");
+                    return res.json({ data });
                 }
             }
             catch (error) {
+                console.log(error);
                 res.status(500).json({
                     success: false,
                     message: "An error occurred",
