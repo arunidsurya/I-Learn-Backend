@@ -52,18 +52,11 @@ class userController {
       if (data?.success) {
         console.log("login success");
         
-        // res.cookie("access_token", data.access_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        // });
         res.cookie("refresh_token", data.refresh_token, {
           httpOnly: true,
           secure: true,
           sameSite: "none",
         });
-        // res.cookie("access_token", data.access_token);
-        // res.cookie("refresh_token", data.refresh_token);
 
         return res.status(201).json({ data });
       } else {
