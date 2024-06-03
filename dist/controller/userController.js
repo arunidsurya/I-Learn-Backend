@@ -50,21 +50,7 @@ class userController {
                 const { email, password } = req.body;
                 const data = yield this.userCase.loginUser(email, password);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    // res.cookie("access_token", data.access_token, {
-                    //   httpOnly: true,
-                    //   secure: true,
-                    //   sameSite: "none",
-                    // });
-                    // res.cookie("refresh_token", data.refresh_token, {
-                    //   httpOnly: true,
-                    //   secure: true,
-                    //   sameSite: "none",
-                    // });
-                    return res
-                        .cookie("access_token", data.access_token, {
-                        secure: true,
-                        sameSite: "none",
-                    })
+                    res
                         .cookie("refresh_token", data.refresh_token, {
                         secure: true,
                         sameSite: "none",
