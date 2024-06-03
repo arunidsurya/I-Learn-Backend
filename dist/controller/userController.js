@@ -62,17 +62,15 @@ class userController {
                     // });
                     return res
                         .cookie("access_token", data.access_token, {
-                        httpOnly: true,
                         secure: true,
                         sameSite: "none",
                     })
                         .cookie("refresh_token", data.refresh_token, {
-                        httpOnly: true,
                         secure: true,
                         sameSite: "none",
                     })
                         .status(201)
-                        .json({ data });
+                        .json(data);
                 }
                 else {
                     return res.json({ data });
