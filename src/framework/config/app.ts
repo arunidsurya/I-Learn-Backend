@@ -21,24 +21,27 @@ class CustomError extends Error {
 export const createServer = () => {
   try {
     const app = express();
+    const corsOptions = {
+      origin: process.env.ORIGIN || "*",
+      credentials: true,
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+      allowedHeaders:
+        "Origin,X-Requested-With,Content-Type,Accept,Authorization",
+      optionsSuccessStatus: 200,
+    };
     app.use(express.json());
-    app.use(urlencoded({ extended: true }));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(cors(corsOptions));
+    app.options('*',cors(corsOptions))
     app.use(cookieParser());
-    app.use(
-      cors({
-        // origin: process.env.ORIGIN,
-        origin:'*',
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        credentials: true,
-      })
-    );
+
 
     app.use("/api/v1", userRouter);
     app.use("/api/v1", adminRouter);
     app.use("/api/v1", tutorRouter);
 
-    app.use("*", errorRouter);
 
+    app.use("*", errorRouter);
     app.use(errorHandler);
 
     return app;

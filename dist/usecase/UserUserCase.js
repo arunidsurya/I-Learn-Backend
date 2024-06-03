@@ -81,9 +81,12 @@ class userUserCase {
     }
     loginUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(email);
+            console.log(password);
             try {
                 console.log("Reached usecase");
                 const user = yield this.iUserRepository.findByEmail(email);
+                console.log(user);
                 if (!user) {
                     console.log("no user found");
                     return {
