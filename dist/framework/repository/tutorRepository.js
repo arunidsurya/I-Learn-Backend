@@ -137,6 +137,28 @@ class tutorRepository {
             }
         });
     }
+    updateTutorPassword(oldPassword, newPassword, email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const tutor = yield tutorModel_1.default.findOne({ email }).select("+password");
+                if (!tutor) {
+                    return null;
+                }
+                const isOldPasswordMatch = yield (tutor === null || tutor === void 0 ? void 0 : tutor.comparePassword(oldPassword));
+                if (!isOldPasswordMatch) {
+                    return null;
+                }
+                tutor.password = newPassword;
+                yield tutor.save();
+                redis_1.redis.set(`tutor-${tutor.email}`, JSON.stringify(tutor));
+                return tutor;
+            }
+            catch (error) {
+                console.log(error);
+                return null;
+            }
+        });
+    }
     createCourse(data, tutor) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

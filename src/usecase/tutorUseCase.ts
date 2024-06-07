@@ -93,7 +93,6 @@ class tutorUseCase {
     try {
       const tutor = await this.iTutorRepository.updateTutorinfo(tutorData);
 
-
       if (!tutor) {
         return {
           status: 500,
@@ -106,6 +105,37 @@ class tutorUseCase {
         status: 201,
         success: true,
         message: "Account updated successfully",
+        tutor,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async upadteTutorpassword(
+    oldPassword: string,
+    newPassword: string,
+    email: string
+  ) {
+    
+    try {
+      const tutor = await this.iTutorRepository.updateTutorPassword(
+        oldPassword,
+        newPassword,
+        email
+      );
+
+      if (tutor === null) {
+        return {
+          status: 500,
+          success: false,
+          message: "Account updation unsuccessfull, Please try again later",
+          tutor,
+        };
+      }
+      return {
+        status: 201,
+        success: true,
+        message: "Password updated successfully",
         tutor,
       };
     } catch (error) {

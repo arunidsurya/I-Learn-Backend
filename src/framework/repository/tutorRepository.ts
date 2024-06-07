@@ -132,6 +132,30 @@ class tutorRepository implements ITutorRepository {
     }
   }
 
+  async updateTutorPassword(oldPassword: string, newPassword: string, email: string): Promise<Tutor | null> {
+    
+        try {
+          const tutor = await tutorModel.findOne({ email }).select("+password");
+
+          if (!tutor) {
+            return null;
+          }
+          const isOldPasswordMatch = await tutor?.comparePassword(oldPassword);
+
+          if (!isOldPasswordMatch) {
+            return null;
+          }
+          tutor.password = newPassword;
+          await tutor.save();
+          redis.set(`tutor-${tutor.email}`, JSON.stringify(tutor) as any);
+
+          return tutor;
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
+  }
+
   async createCourse(
     data: Course,
     tutor: Tutor

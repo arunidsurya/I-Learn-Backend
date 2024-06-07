@@ -70,6 +70,28 @@ class tutorController {
             }
         });
     }
+    upadteTutorpassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { oldPassword, newPassword, email } = req.body;
+                const tutor = yield this.tutorCase.upadteTutorpassword(oldPassword, newPassword, email);
+                if (tutor && !tutor.success) {
+                    return res.json({
+                        success: false,
+                        status: 400,
+                        message: "Account updation unsuccessful. Please try again later.",
+                    });
+                }
+                res.status(200).json({ success: true, tutor });
+            }
+            catch (error) {
+                console.log(error);
+                res
+                    .status(500)
+                    .json({ success: false, message: "Internal server error." });
+            }
+        });
+    }
     logoutTutor(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;

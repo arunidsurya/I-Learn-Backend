@@ -110,6 +110,30 @@ class tutorUseCase {
             }
         });
     }
+    upadteTutorpassword(oldPassword, newPassword, email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const tutor = yield this.iTutorRepository.updateTutorPassword(oldPassword, newPassword, email);
+                if (tutor === null) {
+                    return {
+                        status: 500,
+                        success: false,
+                        message: "Account updation unsuccessfull, Please try again later",
+                        tutor,
+                    };
+                }
+                return {
+                    status: 201,
+                    success: true,
+                    message: "Password updated successfully",
+                    tutor,
+                };
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     createCourse(data, tutor) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

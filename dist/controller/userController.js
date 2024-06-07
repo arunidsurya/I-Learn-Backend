@@ -170,12 +170,10 @@ class userController {
                         message: "Account updation unsuccessful. Please try again later.",
                     });
                 }
-                // Assuming update was successful, return a 200 status with the updated user data
                 res.status(200).json({ success: true, user });
             }
             catch (error) {
                 console.log(error);
-                // Handle other errors, if any
                 res
                     .status(500)
                     .json({ success: false, message: "Internal server error." });

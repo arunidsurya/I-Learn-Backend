@@ -18,6 +18,11 @@ interface ITutorRepository {
     data: Course,
     tutor: Tutor
   ): Promise<Document<any, any, Course> | null>;
+    updateTutorPassword(
+    oldPassword: string,
+    newPassword: string,
+    email: string
+  ): Promise<Tutor | null>;
   editCourse(data: Course): Promise<Document<any, any, Course> | null>;
   deleteCourse(_id: string): Promise<Boolean | null>;
   getAllCourses(id: string): Promise<Document<any, any, Course>[] | null>;

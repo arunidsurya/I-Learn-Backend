@@ -61,6 +61,33 @@ class tutorController {
     }
   }
 
+  async upadteTutorpassword(req: Request, res: Response, next: NextFunction) {
+    
+    
+    try {
+      const { oldPassword, newPassword, email } = req.body;
+      const tutor = await this.tutorCase.upadteTutorpassword(
+        oldPassword,
+        newPassword,
+        email
+      );
+      if (tutor && !tutor.success) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "Account updation unsuccessful. Please try again later.",
+        });
+      }
+
+      res.status(200).json({ success: true, tutor });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error." });
+    }
+  }
+
   async logoutTutor(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.tutor?.email || "";
