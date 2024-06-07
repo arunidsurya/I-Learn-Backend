@@ -25,6 +25,9 @@ tutorRouter.post("/tutor/login", (req, res, next) => {
 tutorRouter.get("/tutor/logout", tutorAuth_1.isTutuorAuthorized, (req, res, next) => {
     controller.logoutTutor(req, res, next);
 });
+tutorRouter.put("/tutor/update_profile_info", (req, res, next) => {
+    controller.upadteTutorInfo(req, res, next);
+});
 tutorRouter.post("/tutor/create_course", tutorAuth_1.isTutuorAuthorized, (req, res, next) => {
     controller.createCourse(req, res, next);
 });

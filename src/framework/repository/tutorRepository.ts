@@ -13,6 +13,7 @@ import CourseDataModel from "../database/courseData";
 import Course from "../../entities/course";
 import NotificationModel from "../database/notificationModel";
 import OrderModel from "../database/orderModel";
+import cloudinary from "../config/cloudinary";
 
 class tutorRepository implements ITutorRepository {
   JwtToken = new JwtTokenService();
@@ -82,6 +83,55 @@ class tutorRepository implements ITutorRepository {
       return null;
     }
   }
+
+  async updateTutorinfo(tutorData: Tutor): Promise<Tutor | null> {
+    try {
+      const { _id, name, institute, avatar } = tutorData;
+
+      const tutor = await tutorModel.findOne({ _id });
+      if (!tutor) {
+        return null;
+      }
+      if (avatar && tutor) {
+        if (tutor.avatar?.public_id) {
+          await cloudinary.uploader.destroy(tutor.avatar.public_id);
+          const uploadRes = await cloudinary.uploader.upload(avatar, {
+            upload_preset: "E_Learning",
+            folder: "avatars",
+          });
+          tutor.name = name || tutor.name;
+          tutor.institute = institute || tutor.institute;
+          tutor.avatar = {
+            url: uploadRes.secure_url,
+            public_id: uploadRes.public_id,
+          };
+        } else {
+          const uploadRes = await cloudinary.uploader.upload(avatar, {
+            upload_preset: "E_Learning",
+            folder: "avatars",
+          });
+          tutor.name = name || tutor.name;
+          tutor.institute = institute || tutor.institute;
+          tutor.avatar = {
+            url: uploadRes.secure_url,
+            public_id: uploadRes.public_id,
+          };
+        }
+      }
+      if (!avatar && tutor) {
+        tutor.name = name || tutor.name;
+        tutor.institute = institute || tutor.institute;
+      }
+
+      await tutor.save();
+
+      return tutor;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
   async createCourse(
     data: Course,
     tutor: Tutor
@@ -108,7 +158,6 @@ class tutorRepository implements ITutorRepository {
       } = data;
 
       const createdCourseData = await CourseDataModel.create(courseData);
-
 
       const courseDataIds = Array.isArray(createdCourseData)
         ? createdCourseData.map((data) => data._id)
@@ -551,7 +600,7 @@ class tutorRepository implements ITutorRepository {
       return null;
     }
   }
-  async last12MonthsUserData(tutorId:string): Promise<boolean | any | null> {
+  async last12MonthsUserData(tutorId: string): Promise<boolean | any | null> {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
@@ -581,7 +630,8 @@ class tutorRepository implements ITutorRepository {
         const courseIds = courses.map((course) => course._id);
 
         const count = await userModel.countDocuments({
-          createdAt: { $gte: startDate, $lt: endDate },courses:{$in:courseIds}
+          createdAt: { $gte: startDate, $lt: endDate },
+          courses: { $in: courseIds },
         });
         last12Months.push({ month: monthYear, count });
       }

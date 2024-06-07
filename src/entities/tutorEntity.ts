@@ -7,7 +7,10 @@ interface Tutor {
   qualifiaction: string;
   experience: string;
   password: string;
-  avtar?: string;
+  avatar?: {
+    url: string;
+    public_id: string;
+  };
   isVerified?: boolean;
   isBolcked?: boolean;
   comparePassword: (password: string) => Promise<boolean>;

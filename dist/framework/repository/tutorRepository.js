@@ -22,6 +22,7 @@ const CategoryModel_1 = __importDefault(require("../database/CategoryModel"));
 const courseData_1 = __importDefault(require("../database/courseData"));
 const notificationModel_1 = __importDefault(require("../database/notificationModel"));
 const orderModel_1 = __importDefault(require("../database/orderModel"));
+const cloudinary_1 = __importDefault(require("../config/cloudinary"));
 class tutorRepository {
     constructor() {
         this.JwtToken = new JwtToken_1.default();
@@ -80,6 +81,55 @@ class tutorRepository {
                     // console.log(token);
                     return token;
                 }
+            }
+            catch (error) {
+                console.log(error);
+                return null;
+            }
+        });
+    }
+    updateTutorinfo(tutorData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const { _id, name, institute, avatar } = tutorData;
+                const tutor = yield tutorModel_1.default.findOne({ _id });
+                if (!tutor) {
+                    return null;
+                }
+                if (avatar && tutor) {
+                    if ((_a = tutor.avatar) === null || _a === void 0 ? void 0 : _a.public_id) {
+                        yield cloudinary_1.default.uploader.destroy(tutor.avatar.public_id);
+                        const uploadRes = yield cloudinary_1.default.uploader.upload(avatar, {
+                            upload_preset: "E_Learning",
+                            folder: "avatars",
+                        });
+                        tutor.name = name || tutor.name;
+                        tutor.institute = institute || tutor.institute;
+                        tutor.avatar = {
+                            url: uploadRes.secure_url,
+                            public_id: uploadRes.public_id,
+                        };
+                    }
+                    else {
+                        const uploadRes = yield cloudinary_1.default.uploader.upload(avatar, {
+                            upload_preset: "E_Learning",
+                            folder: "avatars",
+                        });
+                        tutor.name = name || tutor.name;
+                        tutor.institute = institute || tutor.institute;
+                        tutor.avatar = {
+                            url: uploadRes.secure_url,
+                            public_id: uploadRes.public_id,
+                        };
+                    }
+                }
+                if (!avatar && tutor) {
+                    tutor.name = name || tutor.name;
+                    tutor.institute = institute || tutor.institute;
+                }
+                yield tutor.save();
+                return tutor;
             }
             catch (error) {
                 console.log(error);
@@ -488,7 +538,8 @@ class tutorRepository {
                     });
                     const courseIds = courses.map((course) => course._id);
                     const count = yield userModel_1.default.countDocuments({
-                        createdAt: { $gte: startDate, $lt: endDate }, courses: { $in: courseIds }
+                        createdAt: { $gte: startDate, $lt: endDate },
+                        courses: { $in: courseIds },
                     });
                     last12Months.push({ month: monthYear, count });
                 }

@@ -47,7 +47,7 @@ class userController {
       const data = await this.userCase.loginUser(email, password);
 
       if (data?.success) {
-        res
+        return res
           .cookie("refresh_token", data.refresh_token, {
             secure: true,
             sameSite: "none",
@@ -159,7 +159,6 @@ class userController {
         newPassword,
         email
       );
-      // console.log(user);
       if (user && !user.success) {
         return res.json({
           success: false,

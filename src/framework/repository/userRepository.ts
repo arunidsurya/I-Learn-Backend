@@ -50,12 +50,11 @@ class userRepository implements IUserRepository {
     email: string,
     password: string
   ): Promise<{ access_token: string; refresh_token: string } | null> {
- 
     try {
       const isPasswordMatch = await user.comparePassword(password);
 
       if (!isPasswordMatch) {
-        return null; 
+        return null;
       } else {
         const access_token = await this.JwtToken.SignJwt(user);
         const refresh_token = await this.JwtToken.refreshToken(user);
@@ -146,8 +145,6 @@ class userRepository implements IUserRepository {
     email: string
   ): Promise<User | null> {
     try {
-      // console.log(email);
-
       const user = await userModel.findOne({ email }).select("+password");
       // console.log(user);
 
@@ -155,7 +152,6 @@ class userRepository implements IUserRepository {
         return null;
       }
       const isOldPasswordMatch = await user?.comparePassword(oldPassword);
-      // console.log(isOldPasswordMatch);
 
       if (!isOldPasswordMatch) {
         return null;

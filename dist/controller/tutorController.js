@@ -53,6 +53,23 @@ class tutorController {
             }
         });
     }
+    upadteTutorInfo(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tutorData = req.body;
+            try {
+                const tutor = yield this.tutorCase.updateTutorInfo(tutorData);
+                if (!tutor) {
+                    return res
+                        .status(400)
+                        .json({ success: false, message: "No file uploaded" });
+                }
+                res.status(201).json({ tutor });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     logoutTutor(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -64,7 +81,7 @@ class tutorController {
                     httpOnly: true,
                     secure: true,
                     sameSite: "none",
-                    maxAge: 1
+                    maxAge: 1,
                 });
                 // res.cookie("tutor_token", "", { maxAge: 1 });
                 res.status(200).json({

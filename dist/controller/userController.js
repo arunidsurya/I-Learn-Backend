@@ -50,7 +50,7 @@ class userController {
                 const { email, password } = req.body;
                 const data = yield this.userCase.loginUser(email, password);
                 if (data === null || data === void 0 ? void 0 : data.success) {
-                    res
+                    return res
                         .cookie("refresh_token", data.refresh_token, {
                         secure: true,
                         sameSite: "none",
@@ -163,7 +163,6 @@ class userController {
             try {
                 const { oldPassword, newPassword, email } = req.body;
                 const user = yield this.userCase.upadteUserpassword(oldPassword, newPassword, email);
-                // console.log(user);
                 if (user && !user.success) {
                     return res.json({
                         success: false,

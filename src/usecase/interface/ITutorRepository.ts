@@ -13,6 +13,7 @@ interface ITutorRepository {
     email: string,
     password: string
   ): Promise<string | null>;
+  updateTutorinfo(tutorData: Tutor): Promise<Tutor | null>;
   createCourse(
     data: Course,
     tutor: Tutor

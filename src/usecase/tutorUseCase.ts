@@ -89,6 +89,29 @@ class tutorUseCase {
       console.log(error);
     }
   }
+  async updateTutorInfo(tutorData: Tutor) {
+    try {
+      const tutor = await this.iTutorRepository.updateTutorinfo(tutorData);
+
+
+      if (!tutor) {
+        return {
+          status: 500,
+          success: false,
+          message: "Account updation unsuccessfull, Please try again later",
+          tutor,
+        };
+      }
+      return {
+        status: 201,
+        success: true,
+        message: "Account updated successfully",
+        tutor,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async createCourse(data: Course, tutor: Tutor) {
     try {
       const savedCourse = await this.iTutorRepository.createCourse(data, tutor);

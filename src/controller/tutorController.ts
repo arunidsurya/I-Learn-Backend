@@ -44,18 +44,35 @@ class tutorController {
       });
     }
   }
+
+  async upadteTutorInfo(req: Request, res: Response, next: NextFunction) {
+    const tutorData = req.body;
+
+    try {
+      const tutor = await this.tutorCase.updateTutorInfo(tutorData);
+      if (!tutor) {
+        return res
+          .status(400)
+          .json({ success: false, message: "No file uploaded" });
+      }
+      res.status(201).json({ tutor });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async logoutTutor(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.tutor?.email || "";
       console.log("tutor-email:", email);
 
       redis.del(`tutor-${email}`);
-              res.cookie("tutor_token", "", {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
-                maxAge:1
-              });
+      res.cookie("tutor_token", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 1,
+      });
       // res.cookie("tutor_token", "", { maxAge: 1 });
 
       res.status(200).json({

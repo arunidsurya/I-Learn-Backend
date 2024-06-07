@@ -152,14 +152,12 @@ class userRepository {
     updateUserPassword(oldPassword, newPassword, email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // console.log(email);
                 const user = yield userModel_1.default.findOne({ email }).select("+password");
                 // console.log(user);
                 if (!user) {
                     return null;
                 }
                 const isOldPasswordMatch = yield (user === null || user === void 0 ? void 0 : user.comparePassword(oldPassword));
-                // console.log(isOldPasswordMatch);
                 if (!isOldPasswordMatch) {
                     return null;
                 }
