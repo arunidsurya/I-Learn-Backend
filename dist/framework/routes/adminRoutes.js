@@ -77,6 +77,7 @@ adminRouter.get("/admin/get-notifications", adminAuth_1.isAuthorized, (req, res,
     controller.getNotifications(req, res, next);
 });
 adminRouter.get("/admin/user-analytics", adminAuth_1.isAuthorized, (req, res, next) => {
+    console.log("call");
     controller.getLast12MonthsUserData(req, res, next);
 });
 adminRouter.get("/admin/course-analytics", adminAuth_1.isAuthorized, (req, res, next) => {
@@ -108,5 +109,11 @@ adminRouter.post("/admin/get-search-result", adminAuth_1.isAuthorized, (req, res
 });
 adminRouter.get("/admin/get-one-course/:id", adminAuth_1.isAuthorized, (req, res, next) => {
     controller.getOneCourse(req, res, next);
+});
+adminRouter.put("/admin/update_profile_info", (req, res, next) => {
+    controller.upadteAdminInfo(req, res, next);
+});
+adminRouter.put("/admin/update_password", (req, res, next) => {
+    controller.upadteAdminPassword(req, res, next);
 });
 exports.default = adminRouter;

@@ -132,28 +132,31 @@ class tutorRepository implements ITutorRepository {
     }
   }
 
-  async updateTutorPassword(oldPassword: string, newPassword: string, email: string): Promise<Tutor | null> {
-    
-        try {
-          const tutor = await tutorModel.findOne({ email }).select("+password");
+  async updateTutorPassword(
+    oldPassword: string,
+    newPassword: string,
+    email: string
+  ): Promise<Tutor | null> {
+    try {
+      const tutor = await tutorModel.findOne({ email }).select("+password");
 
-          if (!tutor) {
-            return null;
-          }
-          const isOldPasswordMatch = await tutor?.comparePassword(oldPassword);
+      if (!tutor) {
+        return null;
+      }
+      const isOldPasswordMatch = await tutor?.comparePassword(oldPassword);
 
-          if (!isOldPasswordMatch) {
-            return null;
-          }
-          tutor.password = newPassword;
-          await tutor.save();
-          redis.set(`tutor-${tutor.email}`, JSON.stringify(tutor) as any);
+      if (!isOldPasswordMatch) {
+        return null;
+      }
+      tutor.password = newPassword;
+      await tutor.save();
+      redis.set(`tutor-${tutor.email}`, JSON.stringify(tutor) as any);
 
-          return tutor;
-        } catch (error) {
-          console.log(error);
-          return null;
-        }
+      return tutor;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 
   async createCourse(
@@ -548,35 +551,155 @@ class tutorRepository implements ITutorRepository {
       return false; // Error occurred
     }
   }
+  // async last12MonthsCourseData(id: string): Promise<any> {
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const count = await CourseModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //         instructorId: id,
+  //       });
+
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+  // async last12MonthsOrderData(tutorId: string): Promise<any> {
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const courses = await CourseModel.find({ instructorId: tutorId });
+  //       const courseIds = courses.map((course) => course._id);
+
+  //       const count = await OrderModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //         courseId: { $in: courseIds },
+  //       });
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     console.log(last12Months);
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+  // async last12MonthsUserData(tutorId: string): Promise<boolean | any | null> {
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const courses = await CourseModel.find({
+  //         instructorId: tutorId,
+  //       });
+  //       const courseIds = courses.map((course) => course._id);
+
+  //       const count = await userModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //         courses: { $in: courseIds },
+  //       });
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
   async last12MonthsCourseData(id: string): Promise<any> {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
-        const endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
-        );
+        // Calculate the start and end dates for the current month in the loop
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
+        );
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i + 1,
+          1
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        // Format the month and year for display
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
 
+        // Count the number of courses created between startDate and endDate by the instructor
         const count = await CourseModel.countDocuments({
           createdAt: { $gte: startDate, $lt: endDate },
           instructorId: id,
         });
 
+        // Add the result to the last12Months array
         last12Months.push({ month: monthYear, count });
       }
       return last12Months;
@@ -589,35 +712,42 @@ class tutorRepository implements ITutorRepository {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
-        const endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
-        );
+        // Calculate the start and end dates for the current month in the loop
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
+        );
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i + 1,
+          1
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        // Format the month and year for display
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
 
+        // Find the courses taught by the specified tutor
         const courses = await CourseModel.find({ instructorId: tutorId });
         const courseIds = courses.map((course) => course._id);
 
+        // Count the number of orders for the tutor's courses created between startDate and endDate
         const count = await OrderModel.countDocuments({
           createdAt: { $gte: startDate, $lt: endDate },
           courseId: { $in: courseIds },
         });
+
+        // Add the result to the last12Months array
         last12Months.push({ month: monthYear, count });
+        console.log(last12Months);
+        
       }
+      console.log(last12Months);
       return last12Months;
     } catch (error) {
       console.log(error);
@@ -628,35 +758,37 @@ class tutorRepository implements ITutorRepository {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
-        const endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
-        );
+        // Calculate the start and end dates for the current month in the loop
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
+        );
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i + 1,
+          1
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        // Format the month and year for display
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
 
-        const courses = await CourseModel.find({
-          instructorId: tutorId,
-        });
+        // Find the courses taught by the specified tutor
+        const courses = await CourseModel.find({ instructorId: tutorId });
         const courseIds = courses.map((course) => course._id);
 
+        // Count the number of users who enrolled in the tutor's courses created between startDate and endDate
         const count = await userModel.countDocuments({
           createdAt: { $gte: startDate, $lt: endDate },
           courses: { $in: courseIds },
         });
+
+        // Add the result to the last12Months array
         last12Months.push({ month: monthYear, count });
       }
       return last12Months;

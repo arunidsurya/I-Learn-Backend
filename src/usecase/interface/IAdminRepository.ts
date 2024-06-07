@@ -9,6 +9,7 @@ import PremiumAccount from "../../entities/premiumAccount";
 
 interface IAdminRepository {
   findByEmail(email: string): Promise<Admin | null>;
+  loginAdmin(admin: Admin, email: string, password: string): Promise<string | null>;
   registerAdmin(adminData: Admin): Promise<Admin | null>;
   getUsers(): Promise<Admin[] | null>;
   addUser(userData: User): Promise<User | null>;
@@ -38,6 +39,8 @@ interface IAdminRepository {
   getOnePremiumOffer(_id:string):Promise<PremiumAccount | boolean | null>;
   getSearchResult(searchKey: string): Promise<any[] | boolean | null>;
   getOneCourse(id: string): Promise<Course | null>;
+  updateAdminInfo(adminData: Admin): Promise<Admin | null>;
+  updateAdminPassword(oldPassword: string, newPassword: string, email: string): Promise<Admin | null>;
 }
 
 export default IAdminRepository;

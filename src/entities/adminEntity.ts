@@ -4,7 +4,10 @@ interface Admin {
   email: string;
   gender: string;
   password: string;
-  avtar?: string;
+  avatar?: {
+    url: string;
+    public_id: string;
+  };
   isVerified: boolean;
   comparePassword: (password: string) => Promise<boolean>;
 }

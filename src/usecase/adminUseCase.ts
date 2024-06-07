@@ -23,33 +23,40 @@ class adminUseCase {
   }
 
   async loginAdmin(email: string, password: string) {
-    try {
-      const admin = await this.iAdminRepository.findByEmail(email);
-      if (!admin) {
-        return {
-          success: false,
-          message: "Invalid email or password",
-        };
-      }
-      const isPasswordMatch = await admin.comparePassword(password);
-      if (!isPasswordMatch) {
-        return {
-          success: false,
-          message: "Entered password is wrong",
-        };
-      }
-      const token = await this.JwtToken.AdminSignJwt(admin);
-      if (!token) {
-        return {
-          success: false,
-          message: "Internal server error, please try again later",
-        };
-      }
-      redis.set(admin.email, JSON.stringify(admin) as any);
-      return { status: 201, success: true, admin, token };
-    } catch (error) {
-      console.log(error);
-    }
+ try {
+   const admin = await this.iAdminRepository.findByEmail(email);
+   if (!admin) {
+     return {
+       status: 400,
+       success: false,
+       message: "invalid credentials",
+     };
+   }
+   if (!admin.isVerified) {
+     return {
+       status: 400,
+       success: false,
+       message: "Account not verified.!! please contact admin",
+     };
+   }
+   const token = await this.iAdminRepository.loginAdmin(admin, email, password);
+   if (!token) {
+     return {
+       status: 400,
+       success: false,
+       message: "invalid credentials",
+     };
+   }
+   return {
+     status: 201,
+     success: true,
+     message: "successfully loggedIn",
+     admin,
+     token,
+   };
+ } catch (error) {
+   console.log(error);
+ }
   }
   async adminRegister(adminData: Admin) {
     try {
@@ -389,6 +396,58 @@ class adminUseCase {
     } catch (error) {
       console.log(error);
       return null;
+    }
+  }
+  async updateAdminInfo(adminData: Admin) {
+    try {
+      const admin = await this.iAdminRepository.updateAdminInfo(adminData);
+
+      if (!admin) {
+        return {
+          status: 500,
+          success: false,
+          message: "Account updation unsuccessfull, Please try again later",
+          admin,
+        };
+      }
+      return {
+        status: 201,
+        success: true,
+        message: "Account updated successfully",
+        admin,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async upadteAdminPassword(
+    oldPassword: string,
+    newPassword: string,
+    email: string
+  ) {
+    try {
+      const admin = await this.iAdminRepository.updateAdminPassword(
+        oldPassword,
+        newPassword,
+        email
+      );
+
+      if (admin === null) {
+        return {
+          status: 500,
+          success: false,
+          message: "Account updation unsuccessfull, Please try again later",
+          admin,
+        };
+      }
+      return {
+        status: 201,
+        success: true,
+        message: "Password updated successfully",
+        admin,
+      };
+    } catch (error) {
+      console.log(error);
     }
   }
 }

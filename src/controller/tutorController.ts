@@ -46,7 +46,7 @@ class tutorController {
   }
 
   async upadteTutorInfo(req: Request, res: Response, next: NextFunction) {
-    const tutorData = req.body;
+    const tutorData = req.body; 
 
     try {
       const tutor = await this.tutorCase.updateTutorInfo(tutorData);

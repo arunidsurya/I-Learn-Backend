@@ -17,16 +17,29 @@ class adminController {
   }
 
   async loginAdmin(req: Request, res: Response, next: NextFunction) {
-    const { email, password } = req.body;
-    const result = await this.adminCase.loginAdmin(email, password);
-    if (result?.success) {
-      res.cookie("admin_AccessToken", result.token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
+    try {
+      const { email, password } = req.body;
+
+      const data = await this.adminCase.loginAdmin(email, password);
+      // console.log("data :", data);
+
+      if (data?.success) {
+        res.cookie("admin_AccessToken", data.token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+        // res.cookie("tutor_token", data.token);
+
+        res.status(201).json({ data });
+      } else {
+        res.json({ data });
+      }
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred",
       });
-      // res.cookie("admin_AccessToken", result.token);
-      res.json(result);
     }
   }
   async logoutAdmin(req: Request, res: Response, next: NextFunction) {
@@ -35,7 +48,7 @@ class adminController {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge:1
+        maxAge: 1,
       });
       // res.cookie("admin_AccessToken", "", { maxAge: 1 });
       const email = req.admin?.email || "";
@@ -602,6 +615,45 @@ class adminController {
       });
     } catch (error) {
       console.log(error);
+    }
+  }
+  async upadteAdminInfo(req: Request, res: Response, next: NextFunction) {
+    const adminData = req.body;
+
+    try {
+      const admin = await this.adminCase.updateAdminInfo(adminData);
+      if (!admin) {
+        return res
+          .status(400)
+          .json({ success: false, message: "No file uploaded" });
+      }
+      res.status(201).json({ admin });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async upadteAdminPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { oldPassword, newPassword, email } = req.body;
+      const admin = await this.adminCase.upadteAdminPassword(
+        oldPassword,
+        newPassword,
+        email
+      );
+      if (admin && !admin.success) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "Account updation unsuccessful. Please try again later.",
+        });
+      }
+
+      res.status(200).json({ success: true, admin });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error." });
     }
   }
 }

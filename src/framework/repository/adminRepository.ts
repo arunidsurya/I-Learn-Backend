@@ -16,8 +16,13 @@ import NotificationModel, {
 import OrderModel from "../database/orderModel";
 import PremiumAccount from "../../entities/premiumAccount";
 import PremiumAccountModel from "../database/PremiumAccountSchema";
+import cloudinary from "../config/cloudinary";
+import { redis } from "../config/redis";
+import JwtTokenService from "../services/JwtToken";
 
 class adminRepositoty implements IAdminRepository {
+  JwtToken = new JwtTokenService();
+
   async findByEmail(email: string): Promise<Admin | null> {
     try {
       const admin = await adminModel.findOne({ email }).select("+password");
@@ -46,6 +51,26 @@ class adminRepositoty implements IAdminRepository {
       return null;
     }
   }
+  async loginAdmin(
+    admin: Admin,
+    email: string,
+    password: string
+  ): Promise<string | null> {
+    try {
+      const isPasswordMatch = await admin.comparePassword(password);
+      if (!isPasswordMatch) {
+        return null;
+      } else {
+        const token = await this.JwtToken.AdminSignJwt(admin);
+        redis.set(admin.email, JSON.stringify(admin) as any);
+        return token;
+      }
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
   async getUsers(): Promise<Admin[] | null> {
     try {
       const users = await userModel.find({});
@@ -365,26 +390,137 @@ class adminRepositoty implements IAdminRepository {
       return false;
     }
   }
+
+  // async last12MonthsUserData(): Promise<boolean | any | null> {
+  //   // console.log("call");
+
+  //   const user = await userModel.find()
+  //   console.log(user);
+
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const count = await userModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //       });
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+  // async last12MonthsCourseData(): Promise<any> {
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const count = await CourseModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //       });
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+
+  // async last12MonthsOrderData(): Promise<any> {
+  //   try {
+  //     const last12Months: any[] = [];
+  //     const currentDate = new Date();
+  //     currentDate.setDate(currentDate.getDate() + 1);
+
+  //     for (let i = 11; i >= 0; i--) {
+  //       const endDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - i * 28
+  //       );
+  //       const startDate = new Date(
+  //         currentDate.getFullYear(),
+  //         currentDate.getMonth(),
+  //         currentDate.getDate() - 28
+  //       );
+
+  //       const monthYear = endDate.toLocaleString("default", {
+  //         day: "numeric",
+  //         month: "short",
+  //         year: "numeric",
+  //       });
+
+  //       const count = await OrderModel.countDocuments({
+  //         createdAt: { $gte: startDate, $lt: endDate },
+  //       });
+  //       last12Months.push({ month: monthYear, count });
+  //     }
+  //     return last12Months;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+
   async last12MonthsUserData(): Promise<boolean | any | null> {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
         const endDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
+          currentDate.getMonth() - i + 1,
+          0
         );
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
@@ -393,7 +529,6 @@ class adminRepositoty implements IAdminRepository {
           createdAt: { $gte: startDate, $lt: endDate },
         });
         last12Months.push({ month: monthYear, count });
-        
       }
       return last12Months;
     } catch (error) {
@@ -401,33 +536,37 @@ class adminRepositoty implements IAdminRepository {
       return null;
     }
   }
+
   async last12MonthsCourseData(): Promise<any> {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
-        const endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
-        );
+        // Calculate the start and end dates for the current month in the loop
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
+        );
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i + 1,
+          0
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        // Format the month and year for display
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
 
+        // Count the number of courses created between startDate and endDate
         const count = await CourseModel.countDocuments({
           createdAt: { $gte: startDate, $lt: endDate },
         });
+
+        // Add the result to the last12Months array
         last12Months.push({ month: monthYear, count });
       }
       return last12Months;
@@ -441,29 +580,32 @@ class adminRepositoty implements IAdminRepository {
     try {
       const last12Months: any[] = [];
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
 
       for (let i = 11; i >= 0; i--) {
-        const endDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - i * 28
-        );
+        // Calculate the start and end dates for the current month in the loop
         const startDate = new Date(
           currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 28
+          currentDate.getMonth() - i,
+          1
+        );
+        const endDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i + 1,
+          0
         );
 
-        const monthYear = endDate.toLocaleString("default", {
-          day: "numeric",
+        // Format the month and year for display
+        const monthYear = startDate.toLocaleString("default", {
           month: "short",
           year: "numeric",
         });
 
+        // Count the number of orders created between startDate and endDate
         const count = await OrderModel.countDocuments({
           createdAt: { $gte: startDate, $lt: endDate },
         });
+
+        // Add the result to the last12Months array
         last12Months.push({ month: monthYear, count });
       }
       return last12Months;
@@ -472,6 +614,7 @@ class adminRepositoty implements IAdminRepository {
       return null;
     }
   }
+
   async addPremiumOffer(
     title: string,
     description: string,
@@ -584,6 +727,76 @@ class adminRepositoty implements IAdminRepository {
         return null;
       }
       return course;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async updateAdminInfo(adminData: Admin): Promise<Admin | null> {
+    try {
+      const { _id, name, avatar } = adminData;
+
+      const admin = await adminModel.findOne({ _id });
+      if (!admin) {
+        return null;
+      }
+      if (avatar && admin) {
+        if (admin.avatar?.public_id) {
+          await cloudinary.uploader.destroy(admin.avatar.public_id);
+          const uploadRes = await cloudinary.uploader.upload(avatar, {
+            upload_preset: "E_Learning",
+            folder: "avatars",
+          });
+          admin.name = name || admin.name;
+          admin.avatar = {
+            url: uploadRes.secure_url,
+            public_id: uploadRes.public_id,
+          };
+        } else {
+          const uploadRes = await cloudinary.uploader.upload(avatar, {
+            upload_preset: "E_Learning",
+            folder: "avatars",
+          });
+          admin.name = name || admin.name;
+          admin.avatar = {
+            url: uploadRes.secure_url,
+            public_id: uploadRes.public_id,
+          };
+        }
+      }
+      if (!avatar && admin) {
+        admin.name = name || admin.name;
+      }
+
+      await admin.save();
+
+      return admin;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async updateAdminPassword(
+    oldPassword: string,
+    newPassword: string,
+    email: string
+  ): Promise<Admin | null> {
+    try {
+      const admin = await adminModel.findOne({ email }).select("+password");
+
+      if (!admin) {
+        return null;
+      }
+      const isOldPasswordMatch = await admin?.comparePassword(oldPassword);
+
+      if (!isOldPasswordMatch) {
+        return null;
+      }
+      admin.password = newPassword;
+      await admin.save();
+      redis.set(admin.email, JSON.stringify(admin) as any);
+
+      return admin;
     } catch (error) {
       console.log(error);
       return null;

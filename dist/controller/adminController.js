@@ -23,16 +23,28 @@ class adminController {
     }
     loginAdmin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
-            const result = yield this.adminCase.loginAdmin(email, password);
-            if (result === null || result === void 0 ? void 0 : result.success) {
-                res.cookie("admin_AccessToken", result.token, {
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: "none",
+            try {
+                const { email, password } = req.body;
+                const data = yield this.adminCase.loginAdmin(email, password);
+                // console.log("data :", data);
+                if (data === null || data === void 0 ? void 0 : data.success) {
+                    res.cookie("admin_AccessToken", data.token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                    });
+                    // res.cookie("tutor_token", data.token);
+                    res.status(201).json({ data });
+                }
+                else {
+                    res.json({ data });
+                }
+            }
+            catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "An error occurred",
                 });
-                // res.cookie("admin_AccessToken", result.token);
-                res.json(result);
             }
         });
     }
@@ -44,7 +56,7 @@ class adminController {
                     httpOnly: true,
                     secure: true,
                     sameSite: "none",
-                    maxAge: 1
+                    maxAge: 1,
                 });
                 // res.cookie("admin_AccessToken", "", { maxAge: 1 });
                 const email = ((_a = req.admin) === null || _a === void 0 ? void 0 : _a.email) || "";
@@ -658,6 +670,45 @@ class adminController {
             }
             catch (error) {
                 console.log(error);
+            }
+        });
+    }
+    upadteAdminInfo(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const adminData = req.body;
+            try {
+                const admin = yield this.adminCase.updateAdminInfo(adminData);
+                if (!admin) {
+                    return res
+                        .status(400)
+                        .json({ success: false, message: "No file uploaded" });
+                }
+                res.status(201).json({ admin });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    upadteAdminPassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { oldPassword, newPassword, email } = req.body;
+                const admin = yield this.adminCase.upadteAdminPassword(oldPassword, newPassword, email);
+                if (admin && !admin.success) {
+                    return res.json({
+                        success: false,
+                        status: 400,
+                        message: "Account updation unsuccessful. Please try again later.",
+                    });
+                }
+                res.status(200).json({ success: true, admin });
+            }
+            catch (error) {
+                console.log(error);
+                res
+                    .status(500)
+                    .json({ success: false, message: "Internal server error." });
             }
         });
     }

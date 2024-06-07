@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const redis_1 = require("../framework/config/redis");
 class adminUseCase {
     constructor(iAdminRepository, sendEmail, JwtToken) {
         this.iAdminRepository = iAdminRepository;
@@ -22,26 +21,33 @@ class adminUseCase {
                 const admin = yield this.iAdminRepository.findByEmail(email);
                 if (!admin) {
                     return {
+                        status: 400,
                         success: false,
-                        message: "Invalid email or password",
+                        message: "invalid credentials",
                     };
                 }
-                const isPasswordMatch = yield admin.comparePassword(password);
-                if (!isPasswordMatch) {
+                if (!admin.isVerified) {
                     return {
+                        status: 400,
                         success: false,
-                        message: "Entered password is wrong",
+                        message: "Account not verified.!! please contact admin",
                     };
                 }
-                const token = yield this.JwtToken.AdminSignJwt(admin);
+                const token = yield this.iAdminRepository.loginAdmin(admin, email, password);
                 if (!token) {
                     return {
+                        status: 400,
                         success: false,
-                        message: "Internal server error, please try again later",
+                        message: "invalid credentials",
                     };
                 }
-                redis_1.redis.set(admin.email, JSON.stringify(admin));
-                return { status: 201, success: true, admin, token };
+                return {
+                    status: 201,
+                    success: true,
+                    message: "successfully loggedIn",
+                    admin,
+                    token,
+                };
             }
             catch (error) {
                 console.log(error);
@@ -448,6 +454,54 @@ class adminUseCase {
             catch (error) {
                 console.log(error);
                 return null;
+            }
+        });
+    }
+    updateAdminInfo(adminData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const admin = yield this.iAdminRepository.updateAdminInfo(adminData);
+                if (!admin) {
+                    return {
+                        status: 500,
+                        success: false,
+                        message: "Account updation unsuccessfull, Please try again later",
+                        admin,
+                    };
+                }
+                return {
+                    status: 201,
+                    success: true,
+                    message: "Account updated successfully",
+                    admin,
+                };
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    upadteAdminPassword(oldPassword, newPassword, email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const admin = yield this.iAdminRepository.updateAdminPassword(oldPassword, newPassword, email);
+                if (admin === null) {
+                    return {
+                        status: 500,
+                        success: false,
+                        message: "Account updation unsuccessfull, Please try again later",
+                        admin,
+                    };
+                }
+                return {
+                    status: 201,
+                    success: true,
+                    message: "Password updated successfully",
+                    admin,
+                };
+            }
+            catch (error) {
+                console.log(error);
             }
         });
     }
