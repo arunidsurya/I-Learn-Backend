@@ -21,9 +21,10 @@ export const isAuthenticated = async (
   const access_token = req.headers.authorization?.split(" ")[1] as string;
   const refresh_token = req.cookies.refresh_token as string;
 
-  
-  if (!access_token) {
+  // console.log("access_token:", access_token);
 
+  if (!access_token) {
+    console.log("un authorized-1");
     return res
       .status(401)
       .json({ success: false, message: "Unauthorized - No token provided" });
@@ -41,12 +42,14 @@ export const isAuthenticated = async (
     const currentUserData = await userModel.findOne({ email: userEmail });
 
     if (currentUserData?.isBlocked) {
+      console.log("un authorized-2");
       return res
         .status(401)
         .send({ success: false, message: "Profile is blocked" });
     }
 
     if (!user) {
+      console.log("un authorized-3");
       return res
         .status(401)
         .send({ success: false, message: "User not found" });
@@ -58,6 +61,7 @@ export const isAuthenticated = async (
     // Handle TokenExpiredError
     if (error instanceof TokenExpiredError) {
       if (!refresh_token) {
+        console.log("un authorized-4");
         return res
           .status(401)
           .send({ success: false, message: "Unauthorized - Invalid token" });
@@ -73,6 +77,7 @@ export const isAuthenticated = async (
         const user = await redis.get(`user-${userEmail}`);
 
         if (!user) {
+          console.log("un authorized-5");
           return res
             .status(401)
             .send({ success: false, message: "User not found" });
@@ -90,6 +95,7 @@ export const isAuthenticated = async (
 
         return next();
       } catch (refreshError) {
+        console.log("un authorized-6");
         return res
           .status(401)
           .send({ success: false, message: "Unauthorized - Invalid token" });
@@ -102,4 +108,3 @@ export const isAuthenticated = async (
       .send({ success: false, message: "Internal Server Error" });
   }
 };
-

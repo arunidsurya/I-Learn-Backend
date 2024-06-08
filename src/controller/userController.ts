@@ -591,18 +591,21 @@ class userController {
       premiumOffers,
     });
   }
+
   async getVieoCallCredentials(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
+    console.log("reached here in controller");
+
     try {
       const appID = process.env.ZEGOCLOUD_APP_ID;
       const serverSecret = process.env.ZEGOCLOUD_SERVER_SECRET;
-      res.status(200).json({
+      const data = { appID, serverSecret };
+      res.json({
         success: true,
-        appID,
-        serverSecret,
+        data,
       });
     } catch (error) {
       console.log(error);

@@ -643,7 +643,6 @@ class tutorRepository {
                     });
                     // Add the result to the last12Months array
                     last12Months.push({ month: monthYear, count });
-                    console.log(last12Months);
                 }
                 console.log(last12Months);
                 return last12Months;
