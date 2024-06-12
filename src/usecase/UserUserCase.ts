@@ -271,6 +271,14 @@ class userUserCase {
       const isEmailExist = await this.iUserRepository.findByEmail(email);
       // console.log(isEmailExist);
 
+      if(isEmailExist?.isBlocked){
+        return{
+          status:401,
+          success:false,
+          message:"Account blocked!!Please contact admin"
+        }
+      }
+
       if (isEmailExist) {
         const proToken = await this.iUserRepository.googleLogin(isEmailExist);
         if (proToken) {

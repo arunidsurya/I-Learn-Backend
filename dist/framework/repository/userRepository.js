@@ -153,7 +153,6 @@ class userRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield userModel_1.default.findOne({ email }).select("+password");
-                // console.log(user);
                 if (!user) {
                     return null;
                 }

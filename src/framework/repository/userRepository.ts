@@ -145,9 +145,9 @@ class userRepository implements IUserRepository {
     email: string
   ): Promise<User | null> {
     try {
+  
       const user = await userModel.findOne({ email }).select("+password");
-      // console.log(user);
-
+ 
       if (!user) {
         return null;
       }

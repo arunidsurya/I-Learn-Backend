@@ -250,6 +250,13 @@ class userUserCase {
             try {
                 const isEmailExist = yield this.iUserRepository.findByEmail(email);
                 // console.log(isEmailExist);
+                if (isEmailExist === null || isEmailExist === void 0 ? void 0 : isEmailExist.isBlocked) {
+                    return {
+                        status: 401,
+                        success: false,
+                        message: "Account blocked!!Please contact admin"
+                    };
+                }
                 if (isEmailExist) {
                     const proToken = yield this.iUserRepository.googleLogin(isEmailExist);
                     if (proToken) {
